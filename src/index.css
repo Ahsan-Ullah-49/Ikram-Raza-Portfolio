@@ -131,3 +131,65 @@
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+/* ── Hero Section Keyframes ── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes heroOrbitSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes heroOrbitSpinRev {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+@keyframes heroPulse {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.5); }
+}
+
+@keyframes heroCursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes heroCenterPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1) translate(-50%, -50%); }
+  50%       { opacity: 0.7; transform: scale(1.1) translate(-50%, -50%); }
+}
+
+@keyframes toolFloat {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50%       { transform: translate(-50%, -50%) translateY(-8px); }
+}
+
+@keyframes heroParticleUp {
+  0% { transform: translateY(40px); opacity: 0; }
+  20% { opacity: 0.45; }
+  80% { opacity: 0.2; }
+  100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+/* Disable hero motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  [style*="heroFadeUp"],
+  [style*="heroFloat"],
+  [style*="heroOrbitSpin"],
+  [style*="heroOrbitSpinRev"],
+  [style*="toolFloat"],
+  [style*="heroParticleUp"] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

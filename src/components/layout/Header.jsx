@@ -99,7 +99,7 @@ const Header = () => {
             </div>
 
             {/* ── Desktop Nav ── */}
-            <div className="hidden lg:flex items-center gap-8 xl:gap-10">
+            <div className="hidden xl:flex items-center gap-8 xl:gap-10">
               {navigationLinks.map((link) => (
                 <a
                   key={link.label}
@@ -118,7 +118,7 @@ const Header = () => {
             </div>
 
             {/* ── Desktop Right ── */}
-            <div className="hidden lg:flex items-center gap-4 shrink-0">
+            <div className="hidden xl:flex items-center gap-4 shrink-0">
               <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
               <Button href="#contact" variant="primary" icon={<ArrowRight />}>
                 Book a Call
@@ -126,7 +126,7 @@ const Header = () => {
             </div>
 
             {/* ── Mobile Right ── */}
-            <div className="lg:hidden flex items-center gap-2.5">
+            <div className="xl:hidden flex items-center gap-2.5">
               <ThemeToggle isDark={isDark} onToggle={toggleTheme} className="hidden md:flex" />
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
