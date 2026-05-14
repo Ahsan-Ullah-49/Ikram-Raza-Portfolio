@@ -1,9 +1,11 @@
 import React from 'react';
 import Header from './components/layout/Header';
+import CustomCursor from './components/ui/CustomCursor';
 
 function App() {
   return (
     <div className="relative min-h-[200vh] bg-(--color-bg)">
+      <CustomCursor />
       <Header />
       
       {/* Background Cinematic Effect */}
