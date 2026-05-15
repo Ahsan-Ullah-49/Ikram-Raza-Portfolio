@@ -26,9 +26,9 @@ const Button = ({
 
   const variants = {
     primary:
-      'btn-primary text-(--color-bg) shadow-[0_8px_24px_rgba(245,158,11,0.2)] hover:shadow-[0_12px_40px_rgba(245,158,11,0.35)] hover:-translate-y-0.5 hover:scale-[1.02]',
+      'btn-primary text-[var(--color-bg)] shadow-[0_8px_24px_var(--color-glow)] hover:shadow-[0_12px_40px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]',
     secondary:
-      'btn-secondary text-white border border-white/10 bg-white/5 backdrop-blur-sm hover:border-amber-500/30 hover:shadow-[0_8px_24px_rgba(245,158,11,0.15)] hover:-translate-y-0.5 hover:scale-[1.02]',
+      'btn-secondary text-[var(--color-heading)] border border-[var(--color-border)] bg-[var(--color-glass)] backdrop-blur-sm hover:border-[var(--color-primary)] hover:shadow-[0_8px_24px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]',
   };
 
   const content = (

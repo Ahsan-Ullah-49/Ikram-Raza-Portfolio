@@ -37,9 +37,9 @@ const ThemeToggle = ({ isDark, onToggle, className = '' }) => (
   <button
     onClick={onToggle}
     aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-    className={`group/theme relative w-10 h-10 flex items-center justify-center rounded-xl border border-[rgba(255,255,255,0.12)] bg-white/4 backdrop-blur-sm text-slate-400 hover:text-amber-400 hover:border-amber-500/30 hover:shadow-[0_0_18px_rgba(245,158,11,0.15)] transition-all duration-400 overflow-hidden ${className}`}
+    className={`group/theme relative w-10 h-10 flex items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-glass)] text-[var(--color-muted)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] hover:shadow-[0_0_18px_var(--color-glow)] transition-all duration-400 overflow-hidden ${className}`}
   >
-    <span className="absolute inset-0 rounded-xl bg-linear-to-br from-amber-500/0 to-rose-500/0 group-hover/theme:from-amber-500/10 group-hover/theme:to-rose-500/10 transition-all duration-500 pointer-events-none" />
+    <span className="absolute inset-0 rounded-xl bg-linear-to-br from-[var(--color-primary)]/0 to-[var(--color-secondary)]/0 group-hover/theme:from-[var(--color-primary)]/10 group-hover/theme:to-[var(--color-secondary)]/10 transition-all duration-500 pointer-events-none" />
     <span className={`relative z-10 transition-all duration-500 ${isDark ? 'group-hover/theme:rotate-45' : 'group-hover/theme:-rotate-12'}`}>
       {isDark ? <SunIcon /> : <MoonIcon />}
     </span>
@@ -91,10 +91,10 @@ const Header = () => {
             {/* ── Logo ── */}
             <div className="shrink-0">
               <a href="#home" className="group/logo flex items-center gap-0">
-                <span className="font-logo text-xl md:text-2xl font-bold text-white uppercase tracking-[0.06em] md:tracking-[0.08em] whitespace-nowrap transition-all duration-500 group-hover/logo:tracking-[0.12em]">
+                <span className="font-logo text-xl md:text-2xl font-bold text-[var(--color-heading)] uppercase tracking-[0.06em] md:tracking-[0.08em] whitespace-nowrap transition-all duration-500 group-hover/logo:tracking-[0.12em]">
                   IKRAM
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shrink-0 shadow-[0_0_12px_rgba(245,158,11,0.55)] group-hover/logo:scale-150 transition-all duration-500" />
+                <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shrink-0 shadow-[0_0_12px_var(--color-glow)] group-hover/logo:scale-150 transition-all duration-500" />
               </a>
             </div>
 
@@ -105,7 +105,7 @@ const Header = () => {
                   key={link.label}
                   href={link.href}
                   className={`text-[12px] uppercase tracking-[0.18em] font-medium relative group/link transition-colors duration-300
-                    ${link.label === 'Home' ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+                    ${link.label === 'Home' ? 'text-[var(--color-heading)]' : 'text-[var(--color-muted)] hover:text-[var(--color-heading)]'}`}
                 >
                   <span className="relative z-10">{link.label}</span>
                   {/* centered underline */}
@@ -131,7 +131,7 @@ const Header = () => {
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
                 aria-label="Open menu"
-                className="w-9 h-9 flex items-center justify-center rounded-xl border border-white/10 bg-white/4 text-white hover:text-amber-400 hover:border-amber-500/25 transition-all duration-300"
+                className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-glass)] text-[var(--color-heading)] hover:text-[var(--color-primary)] transition-all duration-300"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

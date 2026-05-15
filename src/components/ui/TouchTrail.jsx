@@ -92,8 +92,8 @@ export default function TouchTrail() {
               top: p.y,
               width: '8px',
               height: '8px',
-              background: 'rgba(245,158,11,0.45)', // Amber main core
-              boxShadow: '0 0 18px rgba(245,158,11,0.28), 0 0 10px rgba(251,113,133,0.18), 0 0 6px rgba(99,102,241,0.12)',
+              background: 'rgba(var(--cursor-amber),0.45)', // Amber main core
+              boxShadow: '0 0 18px rgba(var(--cursor-amber),0.28), 0 0 10px rgba(var(--cursor-rose),0.18), 0 0 6px rgba(var(--cursor-indigo),0.12)',
             }}
           />
         ))}

@@ -48,24 +48,24 @@ const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme }) => {
       {/* Drawer */}
       <div
         className={`absolute right-0 top-0 h-full w-full max-w-[320px] flex flex-col
-          bg-[#0C0B10]/98 backdrop-blur-2xl border-l border-white/5
+          bg-[var(--color-surface)]/98 backdrop-blur-2xl border-l border-[var(--color-border)]
           transform transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {/* decorative glows */}
-        <div className="absolute top-1/4 right-0 w-48 h-48 bg-amber-500/5 blur-[80px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-1/3 -left-10 w-48 h-48 bg-rose-500/5 blur-[80px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/4 right-0 w-48 h-48 bg-[var(--color-primary)]/5 blur-[80px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-1/3 -left-10 w-48 h-48 bg-[var(--color-secondary)]/5 blur-[80px] rounded-full pointer-events-none" />
 
         {/* ── Header row ── */}
-        <div className="relative z-10 flex items-center justify-between px-7 pt-7 pb-5 border-b border-white/6">
+        <div className="relative z-10 flex items-center justify-between px-7 pt-7 pb-5 border-b border-[var(--color-border)]">
           <a href="#home" onClick={onClose} className="flex items-center gap-0">
-            <span className="font-logo text-lg font-bold text-white uppercase tracking-[0.22em]">IKRAM</span>
-            <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+            <span className="font-logo text-lg font-bold text-[var(--color-heading)] uppercase tracking-[0.22em]">IKRAM</span>
+            <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shadow-[0_0_10px_var(--color-glow)]" />
           </a>
           <button
             onClick={onClose}
             aria-label="Close menu"
-            className="w-8 h-8 flex items-center justify-center rounded-xl border border-white/8 bg-white/5 text-white/40 hover:text-white hover:border-white/20 transition-all duration-300"
+            className="w-8 h-8 flex items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-glass)] text-[var(--color-muted)] hover:text-[var(--color-heading)] hover:border-[var(--color-border-strong)] transition-all duration-300"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -85,9 +85,9 @@ const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme }) => {
               style={{
                 transitionDelay: isOpen ? `${80 + i * 55}ms` : '0ms',
               }}
-              className={`group flex items-center justify-between py-3.5 border-b border-white/5 text-[12px] uppercase tracking-[0.2em] font-semibold transition-all duration-500
+              className={`group flex items-center justify-between py-3.5 border-b border-[var(--color-border)] text-[12px] uppercase tracking-[0.2em] font-semibold transition-all duration-500
                 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'}
-                ${link.label === 'Home' ? 'text-white' : 'text-slate-500 hover:text-white'}`}
+                ${link.label === 'Home' ? 'text-[var(--color-heading)]' : 'text-[var(--color-muted)] hover:text-[var(--color-heading)]'}`}
             >
               <span>{link.label}</span>
               <svg
@@ -107,18 +107,18 @@ const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme }) => {
           </Button>
 
           {/* Theme row */}
-          <div className="flex items-center justify-between pt-4 border-t border-white/6">
-            <span className="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-medium">
+          <div className="flex items-center justify-between pt-4 border-t border-[var(--color-border)]">
+            <span className="text-[11px] uppercase tracking-[0.18em] text-[var(--color-muted)] font-medium">
               {isDark ? 'Dark Mode' : 'Light Mode'}
             </span>
             {/* Custom Premium Toggle */}
             <button
               onClick={onToggleTheme}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="group/theme relative w-12 h-10 flex items-center justify-center rounded-xl border border-[rgba(255,255,255,0.12)] bg-white/4 backdrop-blur-sm text-slate-400 hover:text-amber-400 hover:border-amber-500/30 hover:shadow-[0_0_18px_rgba(245,158,11,0.15)] transition-all duration-400 overflow-hidden"
+              className="group/theme relative w-12 h-10 flex items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-glass)] text-[var(--color-muted)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] hover:shadow-[0_0_18px_var(--color-glow)] transition-all duration-400 overflow-hidden"
             >
               {/* soft gradient bg on hover */}
-              <span className="absolute inset-0 rounded-xl bg-linear-to-br from-amber-500/0 to-rose-500/0 group-hover/theme:from-amber-500/10 group-hover/theme:to-rose-500/10 transition-all duration-500 pointer-events-none" />
+              <span className="absolute inset-0 rounded-xl bg-linear-to-br from-[var(--color-primary)]/0 to-[var(--color-secondary)]/0 group-hover/theme:from-[var(--color-primary)]/10 group-hover/theme:to-[var(--color-secondary)]/10 transition-all duration-500 pointer-events-none" />
               <span className={`relative z-10 transition-all duration-500 ${isDark ? 'group-hover/theme:rotate-45' : 'group-hover/theme:-rotate-12'}`}>
                 {isDark ? <SunIcon /> : <MoonIcon />}
               </span>

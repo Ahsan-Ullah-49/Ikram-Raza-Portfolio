@@ -29,9 +29,9 @@ const TRAIL_CFG = Array.from({ length: TRAIL_COUNT }, (_, i) => {
 
   // Color: amber (0-3) → rose (4-6) → indigo (7-9)
   const rgb =
-    i < 4 ? '245, 158, 11'   // #F59E0B
-    : i < 7 ? '251, 113, 133' // #FB7185
-    : '99, 102, 241';         // #6366F1
+    i < 4 ? 'var(--cursor-amber)'   // #F59E0B / #D97706
+    : i < 7 ? 'var(--cursor-rose)'  // #FB7185 / #E11D48
+    : 'var(--cursor-indigo)';       // #6366F1 / #4F46E5
 
   return { size, opacity, factor, rgb, t };
 });
@@ -40,18 +40,18 @@ const TRAIL_CFG = Array.from({ length: TRAIL_COUNT }, (_, i) => {
 const RING_BG = `conic-gradient(
   from 0deg,
   transparent 0deg,
-  rgba(245, 158, 11, 0.00) 35deg,
-  rgba(245, 158, 11, 0.95) 110deg,
-  rgba(251, 113, 133, 0.90) 180deg,
-  rgba(99, 102, 241, 0.40) 235deg,
+  rgba(var(--cursor-amber), 0.00) 35deg,
+  rgba(var(--cursor-amber), 0.95) 110deg,
+  rgba(var(--cursor-rose), 0.90) 180deg,
+  rgba(var(--cursor-indigo), 0.40) 235deg,
   transparent 290deg,
-  rgba(245, 158, 11, 0.55) 330deg,
+  rgba(var(--cursor-amber), 0.55) 330deg,
   transparent 360deg
 )`;
 const RING_MASK =
   'radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px))';
 const RING_GLOW =
-  'drop-shadow(0 0 8px rgba(245, 158, 11, 0.35)) drop-shadow(0 0 14px rgba(251, 113, 133, 0.18))';
+  'drop-shadow(0 0 8px rgba(var(--cursor-amber), 0.35)) drop-shadow(0 0 14px rgba(var(--cursor-rose), 0.18))';
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function CustomCursor() {
@@ -232,11 +232,11 @@ export default function CustomCursor() {
           width:         '6px',
           height:        '6px',
           borderRadius:  '50%',
-          background:    '#F59E0B',
+          background:    'var(--cursor-dot)',
           boxShadow: [
-            '0 0 0 3px rgba(245, 158, 11, 0.10)',
-            '0 0 10px 4px rgba(245, 158, 11, 0.40)',
-            '0 0 18px 6px rgba(251, 113, 133, 0.16)',
+            '0 0 0 3px rgba(var(--cursor-amber), 0.10)',
+            '0 0 10px 4px rgba(var(--cursor-amber), 0.40)',
+            '0 0 18px 6px rgba(var(--cursor-rose), 0.16)',
           ].join(', '),
           pointerEvents: 'none',
           zIndex:        9999,

@@ -59,7 +59,7 @@ export default function CVModal({ isOpen, onClose }) {
     /* Backdrop */
     <div
       className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
-      style={{ background: 'rgba(8,7,11,0.82)', backdropFilter: 'blur(8px)' }}
+      style={{ background: 'var(--color-glass)', backdropFilter: 'blur(8px)' }}
       onClick={onClose}
       aria-modal="true"
       role="dialog"
@@ -69,10 +69,10 @@ export default function CVModal({ isOpen, onClose }) {
       <div
         className="relative w-full max-w-[680px] max-h-[90vh] overflow-y-auto rounded-2xl"
         style={{
-          background: 'rgba(18,17,24,0.92)',
-          border: '1px solid rgba(245,158,11,0.20)',
+          background: 'var(--color-glass)',
+          border: '1px solid var(--color-border)',
           backdropFilter: 'blur(24px)',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.6), 0 0 40px rgba(245,158,11,0.08)',
+          boxShadow: '0 24px 80px var(--color-shadow), 0 0 40px var(--color-glow)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -80,8 +80,8 @@ export default function CVModal({ isOpen, onClose }) {
         <div
           className="sticky top-0 z-10 flex items-center justify-between px-8 py-5 rounded-t-2xl"
           style={{
-            background: 'rgba(18,17,24,0.95)',
-            borderBottom: '1px solid rgba(245,158,11,0.12)',
+            background: 'var(--color-surface)',
+            borderBottom: '1px solid var(--color-border)',
             backdropFilter: 'blur(20px)',
           }}
         >
@@ -111,16 +111,16 @@ export default function CVModal({ isOpen, onClose }) {
             aria-label="Close CV modal"
             className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200"
             style={{
-              border: '1px solid rgba(255,255,255,0.10)',
+              border: '1px solid var(--color-border)',
               color: 'var(--color-muted)',
-              background: 'rgba(255,255,255,0.04)',
+              background: 'var(--color-glass)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(245,158,11,0.35)';
-              e.currentTarget.style.color = '#F59E0B';
+              e.currentTarget.style.borderColor = 'var(--color-primary)';
+              e.currentTarget.style.color = 'var(--color-primary)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)';
+              e.currentTarget.style.borderColor = 'var(--color-border)';
               e.currentTarget.style.color = 'var(--color-muted)';
             }}
           >
@@ -194,7 +194,7 @@ export default function CVModal({ isOpen, onClose }) {
           </section>
 
           {/* Divider */}
-          <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(245,158,11,0.2), transparent)' }} />
+          <div style={{ height: '1px', background: 'linear-gradient(to right, transparent, var(--color-border), transparent)' }} />
 
           {/* Download button */}
           {/* TODO: Replace heroData.cvPdfPath with the real uploaded PDF path when ready */}
@@ -202,20 +202,19 @@ export default function CVModal({ isOpen, onClose }) {
             <a
               href={heroData.cvPdfPath}
               download="Ikram_Raza_CV.pdf"
-              className="group relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-xs tracking-[0.18em] uppercase transition-all duration-300"
+              className="group relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-xs tracking-[0.18em] uppercase transition-all duration-300 btn-primary"
               style={{
                 fontFamily: 'var(--font-body)',
-                background: 'linear-gradient(135deg, #F59E0B 0%, #FB7185 100%)',
-                color: '#08070B',
-                boxShadow: '0 4px 24px rgba(245,158,11,0.28)',
+                color: 'var(--color-bg)',
+                boxShadow: '0 4px 24px var(--color-glow)',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 10px 36px rgba(245,158,11,0.42)';
+                e.currentTarget.style.boxShadow = '0 10px 36px var(--color-glow)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 24px rgba(245,158,11,0.28)';
+                e.currentTarget.style.boxShadow = '0 4px 24px var(--color-glow)';
               }}
             >
               {/* Shine sweep */}
@@ -247,7 +246,7 @@ function SectionLabel({ children }) {
       >
         {children}
       </p>
-      <div className="flex-1" style={{ height: '1px', background: 'rgba(245,158,11,0.15)' }} />
+      <div className="flex-1" style={{ height: '1px', background: 'var(--color-border)' }} />
     </div>
   );
 }

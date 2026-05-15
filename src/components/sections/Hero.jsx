@@ -89,7 +89,7 @@ function TitleLine({ line }) {
               {part}
             </span>
             {i < parts.length - 1 && (
-              <span style={{ color: 'rgba(245,158,11,0.45)', fontSize: '0.85rem' }}>•</span>
+              <span style={{ color: 'var(--color-primary)', opacity: 0.45, fontSize: '0.85rem' }}>•</span>
             )}
           </span>
         ))}
@@ -123,7 +123,7 @@ function TitleLine({ line }) {
           <span 
             aria-hidden="true" 
             style={{ 
-              color: '#F59E0B',
+              color: 'var(--color-primary)',
               animation: 'heroCursorBlink 1s step-end infinite' 
             }}
           >
@@ -147,7 +147,7 @@ export default function Hero() {
       const delay = Math.random() * 10; // 0s to 10s
       const duration = Math.random() * 7 + 7; // 7s to 14s
       const isRose = Math.random() > 0.85;
-      const rgb = isRose ? '251,113,133' : '245,158,11';
+      const rgb = isRose ? 'var(--particle-rose)' : 'var(--particle-amber)';
       return { id: i, size, left, delay, duration, rgb };
     });
   }, []);
@@ -164,7 +164,7 @@ export default function Hero() {
           {particles.map(p => (
             <div
               key={p.id}
-              className="absolute rounded-full"
+              className={`absolute rounded-full hero-particle ${p.rgb.includes('rose') ? 'hero-particle-rose' : 'hero-particle-amber'}`}
               style={{
                 left: `${p.left}%`,
                 bottom: '-20px',
@@ -181,9 +181,9 @@ export default function Hero() {
 
         {/* ── Local ambient glows (hero-only, low opacity) ── */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden z-0">
-          <div className="absolute rounded-full" style={{ width: '600px', height: '600px', top: '-10%', left: '-5%', background: 'radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
-          <div className="absolute rounded-full" style={{ width: '500px', height: '500px', bottom: '-5%', right: '10%', background: 'radial-gradient(circle, rgba(251,113,133,0.05) 0%, transparent 70%)', filter: 'blur(40px)' }} />
-          <div className="absolute rounded-full" style={{ width: '400px', height: '400px', top: '30%', right: '25%', background: 'radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+          <div className="absolute rounded-full" style={{ width: '600px', height: '600px', top: '-10%', left: '-5%', background: 'radial-gradient(circle, var(--hero-glow-1) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+          <div className="absolute rounded-full" style={{ width: '500px', height: '500px', bottom: '-5%', right: '10%', background: 'radial-gradient(circle, var(--hero-glow-2) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+          <div className="absolute rounded-full" style={{ width: '400px', height: '400px', top: '30%', right: '25%', background: 'radial-gradient(circle, var(--hero-glow-3) 0%, transparent 70%)', filter: 'blur(60px)' }} />
         </div>
 
         <div className="relative z-10 w-full max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -222,12 +222,6 @@ export default function Hero() {
                   >
                     {lastName}
                   </span>
-                  {/* Gradient underline beneath "Raza" */}
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-0 rounded-full gradient-bg"
-                    style={{ bottom: '-5px', height: '3px', width: '60%', opacity: 0.55 }}
-                  />
                 </span>
               </h1>
 
@@ -275,8 +269,8 @@ export default function Hero() {
                 {/* Secondary — DOWNLOAD CV */}
                 <button
                   onClick={() => setCvOpen(true)}
-                  className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-[11px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none btn-secondary border border-white/10 backdrop-blur-sm hover:border-amber-500/30 hover:shadow-[0_8px_24px_rgba(245,158,11,0.15)] hover:-translate-y-0.5 hover:scale-[1.02]"
-                  style={{ color: 'var(--color-text)', fontFamily: 'var(--font-body)' }}
+                  className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-[11px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none bg-(--color-glass) border border-(--color-border) text-(--color-heading) backdrop-blur-sm hover:border-(--color-primary) hover:shadow-[0_8px_24px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]"
+                  style={{ fontFamily: 'var(--font-body)' }}
                 >
                   <span
                     aria-hidden="true"
@@ -300,11 +294,19 @@ export default function Hero() {
                 {stats.map((stat) => (
                   <div 
                     key={stat.label} 
-                    className="flex flex-col items-center lg:items-start gap-1 px-2 sm:px-5 lg:px-8 border-r border-[var(--color-border)] last:border-r-0 first:pl-0 last:pr-0"
+                    className="flex flex-col items-center lg:items-start gap-1 px-2 sm:px-5 lg:px-8 border-r border-(--color-border) last:border-r-0 first:pl-0 last:pr-0"
                   >
                     <span
-                      className="gradient-text font-bold leading-none"
-                      style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1.5rem, 4vw, 2.2rem)' }}
+                      className="font-bold leading-none"
+                      style={{ 
+                        fontFamily: 'var(--font-body)', 
+                        fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', 
+                        background: 'var(--gradient-brand)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        color: 'transparent'
+                      }}
                     >
                       {stat.value}
                     </span>
@@ -327,7 +329,7 @@ export default function Hero() {
               style={fu(0.28)}
             >
               <div
-                className="relative shrink-0 w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px] xl:w-[540px] xl:h-[540px]"
+                className="relative shrink-0 hero-orbit-shell w-[250px] h-[250px] sm:w-[380px] sm:h-[380px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px] xl:w-[540px] xl:h-[540px]"
               >
                 {/* ── Orbit rings (Moved closer to center) ── */}
 
@@ -335,7 +337,7 @@ export default function Hero() {
                 <div
                   aria-hidden="true"
                   className="absolute rounded-full"
-                  style={{ inset: '16%', border: '1px solid rgba(245,158,11,0.12)', animation: 'heroOrbitSpin 34s linear infinite' }}
+                  style={{ inset: '16%', border: '1px solid var(--orbit-ring-1)', animation: 'heroOrbitSpin 34s linear infinite' }}
                 >
                   <div className="absolute rounded-full" style={{ width: '6px', height: '6px', top: '-3px', left: '20%', background: '#F59E0B', boxShadow: '0 0 10px 3px rgba(245,158,11,0.5)' }} />
                 </div>
@@ -344,7 +346,7 @@ export default function Hero() {
                 <div
                   aria-hidden="true"
                   className="absolute rounded-full"
-                  style={{ inset: '22%', border: '1px solid rgba(251,113,133,0.12)', animation: 'heroOrbitSpinRev 26s linear infinite' }}
+                  style={{ inset: '22%', border: '1px solid var(--orbit-ring-2)', animation: 'heroOrbitSpinRev 26s linear infinite' }}
                 >
                   <div className="absolute rounded-full" style={{ width: '5px', height: '5px', bottom: '-2.5px', right: '30%', background: '#FB7185', boxShadow: '0 0 8px 3px rgba(251,113,133,0.4)' }} />
                 </div>
@@ -353,33 +355,24 @@ export default function Hero() {
                 <div
                   aria-hidden="true"
                   className="absolute rounded-full"
-                  style={{ inset: '28%', border: '1px dashed rgba(99,102,241,0.25)', animation: 'heroOrbitSpin 20s linear infinite' }}
+                  style={{ inset: '28%', border: '1px dashed var(--orbit-ring-3)', animation: 'heroOrbitSpin 20s linear infinite' }}
                 >
                   <div className="absolute rounded-full" style={{ width: '4px', height: '4px', top: '50%', left: '-2px', background: '#6366F1', boxShadow: '0 0 8px 2px rgba(99,102,241,0.4)' }} />
                 </div>
 
-                {/* Center ambient glow */}
-                <div aria-hidden="true" className="absolute rounded-full pointer-events-none" style={{ inset: '30%', background: 'radial-gradient(circle, rgba(245,158,11,0.15) 0%, rgba(251,113,133,0.05) 50%, transparent 100%)', filter: 'blur(12px)' }} />
-
                 {/* ── IR. Center Card ── */}
                 <div
-                  className="absolute top-1/2 left-1/2 flex items-center justify-center rounded-full z-10"
+                  className="absolute top-1/2 left-1/2 flex items-center justify-center rounded-full z-10 hero-orbit-center"
                   style={{
                     width: '38%', height: '38%',
                     transform: 'translate(-50%, -50%)',
-                    background: 'var(--color-glass)',
-                    border: '1px solid rgba(245,158,11,0.4)',
+                    background: 'var(--color-card)',
+                    border: '1px solid var(--color-border)',
                     backdropFilter: 'blur(20px)',
-                    boxShadow: '0 0 60px rgba(245,158,11,0.25), inset 0 2px 15px rgba(255,255,255,0.08)',
+                    boxShadow: '0 0 60px var(--color-glow), inset 0 2px 15px rgba(255,255,255,0.08)',
                   }}
                 >
-                  <div 
-                    className="absolute inset-0 rounded-full pointer-events-none" 
-                    style={{ 
-                      background: 'radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%)',
-                      animation: 'heroCenterPulse 4s ease-in-out infinite' 
-                    }} 
-                  />
+
                   <span 
                     className="absolute font-bold select-none pointer-events-none"
                     style={{
@@ -398,7 +391,7 @@ export default function Hero() {
                       fontFamily: 'var(--font-heading)', 
                       fontSize: 'clamp(2.8rem, 6.5vw, 4.5rem)', 
                       letterSpacing: '0.02em',
-                      background: 'linear-gradient(135deg, #F59E0B 0%, #FB7185 100%)',
+                      background: 'var(--gradient-text)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                     }}
@@ -412,7 +405,7 @@ export default function Hero() {
                   const cfg = TOOLS_ORBIT_CONFIG[i];
                   return (
                     <div
-                      key={tool.label}
+                      key={tool.code}
                       className="absolute inset-0 pointer-events-none"
                     >
                       {/* 1. Initial Angle Setter */}
@@ -430,32 +423,52 @@ export default function Hero() {
                                   
                                   {/* ── Actual Tool Card ── */}
                                   <div
-                                    className="group flex flex-col items-center justify-center rounded-xl cursor-default pointer-events-auto"
+                                    className="group flex flex-col items-center justify-center rounded-xl cursor-default pointer-events-auto text-center"
+                                    title={`${tool.code} - ${tool.name}`}
                                     style={{
-                                      width: 'clamp(48px, 12vw, 64px)',
-                                      height: 'clamp(44px, 11vw, 58px)',
+                                      width: 'clamp(66px, 10vw, 102px)',
+                                      height: 'clamp(38px, 6vw, 58px)',
+                                      padding: '6px 4px',
                                       background: 'var(--color-glass)',
                                       border: `1px solid rgba(${cfg.rgb}, 0.25)`,
                                       backdropFilter: 'blur(12px)',
-                                      boxShadow: `0 8px 24px rgba(0,0,0,0.4), 0 0 12px rgba(${cfg.rgb}, 0.1)`,
+                                      boxShadow: `var(--orbit-card-shadow), 0 0 12px rgba(${cfg.rgb}, 0.1)`,
                                       transition: 'all 0.3s ease',
                                     }}
                                     onMouseEnter={(e) => {
                                       e.currentTarget.style.transform = `scale(1.05)`;
-                                      e.currentTarget.style.boxShadow = `0 12px 32px rgba(0,0,0,0.5), 0 0 20px rgba(${cfg.rgb}, 0.3)`;
+                                      e.currentTarget.style.boxShadow = `0 12px 32px var(--color-shadow), 0 0 20px rgba(${cfg.rgb}, 0.3)`;
                                       e.currentTarget.style.borderColor = `rgba(${cfg.rgb}, 0.5)`;
                                     }}
                                     onMouseLeave={(e) => {
                                       e.currentTarget.style.transform = '';
-                                      e.currentTarget.style.boxShadow = `0 8px 24px rgba(0,0,0,0.4), 0 0 12px rgba(${cfg.rgb}, 0.1)`;
+                                      e.currentTarget.style.boxShadow = `var(--orbit-card-shadow), 0 0 12px rgba(${cfg.rgb}, 0.1)`;
                                       e.currentTarget.style.borderColor = `rgba(${cfg.rgb}, 0.25)`;
                                     }}
                                   >
-                                    <span className="font-bold leading-none transition-colors duration-300" style={{ color: cfg.color, fontFamily: 'var(--font-body)', fontSize: tool.label.length > 2 ? '0.65rem' : '0.85rem' }}>
-                                      {tool.label}
+                                    <span 
+                                      className="font-[800] leading-none transition-transform duration-300 group-hover:scale-105" 
+                                      style={{ 
+                                        color: cfg.color, 
+                                        fontFamily: 'var(--font-body)', 
+                                        fontSize: 'clamp(11px, 1.8vw, 17px)',
+                                        letterSpacing: '0.02em',
+                                      }}
+                                    >
+                                      {tool.code}
                                     </span>
-                                    <span className="hidden sm:block transition-colors duration-300" style={{ fontFamily: 'var(--font-body)', color: 'var(--color-muted)', fontSize: '0.45rem', marginTop: '3px', letterSpacing: '0.02em', opacity: 0.8 }}>
-                                      {tool.name.split(' ')[0]}
+                                    <span 
+                                      className="font-medium leading-[1.1] transition-transform duration-300 group-hover:scale-105" 
+                                      style={{ 
+                                        color: 'var(--color-muted)', 
+                                        fontFamily: 'var(--font-body)', 
+                                        fontSize: 'clamp(6px, 1vw, 10px)',
+                                        marginTop: '3px',
+                                        wordBreak: 'break-word',
+                                        maxWidth: '100%'
+                                      }}
+                                    >
+                                      {tool.name}
                                     </span>
                                   </div>
 

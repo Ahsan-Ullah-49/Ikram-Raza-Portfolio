@@ -2,17 +2,139 @@
 @import "tailwindcss";
 
 /* ── Design Tokens ── */
-:root {
+:root, .dark {
   --color-bg: #08070B;
+  --color-bg-soft: #08070B;
   --color-surface: #121118;
+  --color-card: rgba(18, 17, 24, 0.6);
+  --color-glass: rgba(18, 17, 24, 0.4);
+
+  --color-text: #F8FAFC;
+  --color-heading: #F8FAFC;
+  --color-muted: #94A3B8;
+
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.15);
+
   --color-primary: #F59E0B;
   --color-secondary: #FB7185;
   --color-accent: #6366F1;
-  --color-text: #F8FAFC;
-  --color-muted: #94A3B8;
+
+  --color-shadow: rgba(0, 0, 0, 0.25);
+  --color-shadow-soft: rgba(0, 0, 0, 0.1);
+  --color-glow: rgba(245, 158, 11, 0.15);
+
+  --gradient-brand: linear-gradient(135deg, #F59E0B 0%, #FB7185 100%);
+  --gradient-text: linear-gradient(135deg, #F59E0B 0%, #FB7185 58%, #6366F1 100%);
+
+  --cinematic-bg-1: rgba(99, 102, 241, 0.05);
+  --cinematic-bg-2: rgba(244, 63, 94, 0.05);
+  --cinematic-glow-1: rgba(79, 70, 229, 0.1);
+  --cinematic-glow-2: rgba(225, 29, 72, 0.1);
+
+  --hero-glow-1: rgba(245, 158, 11, 0.06);
+  --hero-glow-2: rgba(251, 113, 133, 0.05);
+  --hero-glow-3: rgba(99, 102, 241, 0.04);
+
+  --orbit-ring-1: rgba(245,158,11,0.12);
+  --orbit-ring-2: rgba(251,113,133,0.12);
+  --orbit-ring-3: rgba(99,102,241,0.25);
+  --orbit-card-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  --particle-amber: 245, 158, 11;
+  --particle-rose: 251, 113, 133;
+  
+  --cursor-amber: 245, 158, 11;
+  --cursor-rose: 251, 113, 133;
+  --cursor-indigo: 99, 102, 241;
+  --cursor-dot: #F59E0B;
 
   --font-heading: "Playfair Display", serif;
   --font-body: "Montserrat", Helvetica, Arial, sans-serif;
+  
+  --bg-gradient: none;
+}
+
+:root[data-theme="light"], .light {
+  --color-bg: #FCF9F2;
+  --color-bg-soft: #F5EFE6;
+
+  --color-surface: #FFFFFF;
+  --color-card: rgba(255, 255, 255, 0.45);
+  --color-glass: rgba(255, 255, 255, 0.35);
+
+  --color-text: #292524;
+  --color-heading: #1C1917;
+  --color-muted: #57534E;
+
+  --color-border: rgba(217, 119, 6, 0.20);
+  --color-border-strong: rgba(217, 119, 6, 0.35);
+
+  --color-primary: #D97706;
+  --color-secondary: #E11D48;
+  --color-accent: #4F46E5;
+
+  --color-shadow: rgba(217, 119, 6, 0.15);
+  --color-shadow-soft: rgba(217, 119, 6, 0.08);
+  --color-glow: rgba(217, 119, 6, 0.30);
+
+  --gradient-brand: linear-gradient(135deg, #D97706 0%, #E11D48 100%);
+  --gradient-text: linear-gradient(135deg, #D97706 0%, #E11D48 58%, #4F46E5 100%);
+
+  --cinematic-bg-1: rgba(217, 119, 6, 0.06);
+  --cinematic-bg-2: rgba(225, 29, 72, 0.05);
+  --cinematic-glow-1: rgba(217, 119, 6, 0.12);
+  --cinematic-glow-2: rgba(225, 29, 72, 0.10);
+
+  --hero-glow-1: rgba(217, 119, 6, 0.20);
+  --hero-glow-2: rgba(225, 29, 72, 0.18);
+  --hero-glow-3: rgba(79, 70, 229, 0.15);
+
+  --orbit-ring-1: rgba(217, 119, 6, 0.34);
+  --orbit-ring-2: rgba(225, 29, 72, 0.22);
+  --orbit-ring-3: rgba(79, 70, 229, 0.20);
+  --orbit-card-shadow: 0 16px 40px rgba(217, 119, 6, 0.15);
+  --particle-amber: 217, 119, 6;
+  --particle-rose: 225, 29, 72;
+
+  --cursor-amber: 217, 119, 6;
+  --cursor-rose: 225, 29, 72;
+  --cursor-indigo: 79, 70, 229;
+  --cursor-dot: #D97706;
+
+  --bg-gradient: 
+    radial-gradient(circle at 10% 40%, rgba(217, 119, 6, 0.18), transparent 50%),
+    radial-gradient(circle at 90% 20%, rgba(225, 29, 72, 0.15), transparent 55%),
+    radial-gradient(circle at 50% 90%, rgba(79, 70, 229, 0.10), transparent 60%),
+    linear-gradient(135deg, #FCF9F2 0%, #F5EFE6 50%, #FCF9F2 100%);
+}
+
+/* ── Light Theme Specific Additions ── */
+:root[data-theme="light"] .hero-orbit-shell {
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+  border-radius: 50%;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(217, 119, 6, 0.12), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(225, 29, 72, 0.08), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.08), transparent 50%);
+  backdrop-filter: blur(24px);
+}
+
+:root[data-theme="light"] .hero-orbit-center {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border-color: rgba(15, 23, 42, 0.14) !important;
+}
+
+:root[data-theme="light"] .hero-particle-amber {
+  background: rgba(217, 119, 6, 0.46) !important;
+  box-shadow: 0 0 10px rgba(217, 119, 6, 0.22) !important;
+  transform: scale(1.15);
+}
+
+:root[data-theme="light"] .hero-particle-rose {
+  background: rgba(225, 29, 72, 0.26) !important;
+  box-shadow: 0 0 10px rgba(225, 29, 72, 0.15) !important;
+  transform: scale(1.15);
 }
 
 @layer base {
@@ -29,6 +151,7 @@
 
   body {
     background-color: var(--color-bg);
+    background-image: var(--bg-gradient);
     color: var(--color-text);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
@@ -59,21 +182,22 @@
 
   /* ── Glassmorphism ── */
   .bg-glass {
-    background: rgba(18, 17, 24, 0.4);
+    background: var(--color-glass);
     backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 18px 60px var(--color-shadow-soft);
   }
 
   /* ── Gradient helpers ── */
   .gradient-text {
-    background: linear-gradient(135deg, #F59E0B, #FB7185);
+    background: var(--gradient-text);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .gradient-bg {
-    background: linear-gradient(135deg, #F59E0B, #FB7185);
+    background: var(--gradient-brand);
   }
 
   /* ── Glow ── */
@@ -87,15 +211,17 @@
 
   /* ── Button variants ── */
   .btn-primary {
-    background: linear-gradient(135deg, #F59E0B 0%, #FB7185 100%);
+    background: var(--gradient-brand);
   }
 
   .btn-primary:hover {
-    background: linear-gradient(135deg, #FBBF24 0%, #FC8FA0 100%);
+    filter: brightness(1.1);
   }
 
   .btn-secondary {
-    background: rgba(18, 17, 24, 0.6);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-heading);
   }
 
   /* ── Legacy shine ── */
@@ -153,19 +279,11 @@
   to   { transform: rotate(-360deg); }
 }
 
-@keyframes heroPulse {
-  0%, 100% { opacity: 1;   transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(1.5); }
-}
+
 
 @keyframes heroCursorBlink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
-}
-
-@keyframes heroCenterPulse {
-  0%, 100% { opacity: 0.4; transform: scale(1) translate(-50%, -50%); }
-  50%       { opacity: 0.7; transform: scale(1.1) translate(-50%, -50%); }
 }
 
 @keyframes toolFloat {
