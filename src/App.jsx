@@ -3,6 +3,7 @@ import Header from './components/layout/Header';
 import CustomCursor from './components/ui/CustomCursor';
 import TouchTrail from './components/ui/TouchTrail';
 import Hero from './components/sections/Hero';
+import About from './components/sections/About';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
 
       <main className="relative z-10">
         <Hero />
+        <About />
       </main>
     </div>
   );

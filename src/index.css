@@ -298,6 +298,87 @@
   100% { transform: translateY(-100vh); opacity: 0; }
 }
 
+/* ── About Section Keyframes ── */
+@keyframes aboutCardFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+.about-card-float {
+  animation: aboutCardFloat 7s ease-in-out infinite;
+}
+
+@keyframes aboutGlowPulse {
+  0%, 100% { opacity: 0.20; transform: scale(1); }
+  50%       { opacity: 0.28; transform: scale(1.04); }
+}
+
+.about-glow-pulse {
+  animation: aboutGlowPulse 8s ease-in-out infinite;
+}
+
+/* ── About floating badge pill ── */
+.about-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 9999px;
+  background: var(--color-glass);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: 0 8px 24px var(--color-shadow-soft);
+  transition: transform 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
+}
+
+.about-badge:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+  box-shadow: 0 12px 32px var(--color-shadow);
+}
+
+/* ── About Highlight Cards — gradient border on hover ──
+   Technique: wrapper = 1px gradient bg, inner div = card bg fills the space.
+   Default: transparent/border-color border. Hover: gradient border appears.
+─────────────────────────────────────────────────────── */
+.about-highlight-card {
+  background: var(--color-border);          /* default: subtle 1px border color */
+  transform: translateY(0);
+  transition: background 300ms ease, transform 300ms ease, box-shadow 300ms ease;
+}
+
+.about-highlight-card:hover {
+  transform: translateY(-3px);
+}
+
+.about-highlight-card > div {
+  border-radius: calc(1rem - 1px);          /* tightly fits inside wrapper */
+}
+
+/* Card 1 — Amber → Rose */
+.about-highlight-card--1:hover {
+  background: linear-gradient(135deg, rgba(245,158,11,0.7), rgba(251,113,133,0.6));
+  box-shadow: 0 8px 32px rgba(245,158,11,0.15), 0 2px 8px rgba(251,113,133,0.10);
+}
+
+/* Card 2 — Indigo → Amber */
+.about-highlight-card--2:hover {
+  background: linear-gradient(135deg, rgba(99,102,241,0.65), rgba(245,158,11,0.55));
+  box-shadow: 0 8px 32px rgba(99,102,241,0.18), 0 2px 8px rgba(245,158,11,0.10);
+}
+
+/* Card 3 — Rose → Indigo */
+.about-highlight-card--3:hover {
+  background: linear-gradient(135deg, rgba(251,113,133,0.65), rgba(99,102,241,0.55));
+  box-shadow: 0 8px 32px rgba(251,113,133,0.15), 0 2px 8px rgba(99,102,241,0.12);
+}
+
+/* Card 4 — Amber → Indigo */
+.about-highlight-card--4:hover {
+  background: linear-gradient(135deg, rgba(245,158,11,0.65), rgba(99,102,241,0.55));
+  box-shadow: 0 8px 32px rgba(245,158,11,0.15), 0 2px 8px rgba(99,102,241,0.10);
+}
+
 /* Disable hero motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   [style*="heroFadeUp"],
@@ -308,6 +389,18 @@
   [style*="heroParticleUp"] {
     animation: none !important;
     opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .about-card-float {
+    animation: none !important;
+  }
+
+  .about-glow-pulse {
+    animation: none !important;
+  }
+
+  .about-highlight-card:hover {
     transform: none !important;
   }
 }
