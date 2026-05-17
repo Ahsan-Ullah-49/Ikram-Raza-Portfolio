@@ -1,6 +1,7 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { heroData } from '../../data/heroData';
 import CVModal from '../ui/CVModal';
+import gsap from 'gsap';
 
 // ── Orbit tool card configurations ──────────────────────────────────────────
 const TOOLS_ORBIT_CONFIG = [
@@ -12,8 +13,59 @@ const TOOLS_ORBIT_CONFIG = [
   { angle: 300, duration: '46s', color: '#3B82F6', rgb: '59,130,246' },  // Meta
 ];
 
-// Fade-up animation helper
-const fu = (delay = 0) => ({ animation: `heroFadeUp 0.85s ease-out ${delay}s both` });
+// Local CountUp Animation Component
+function CountUp({ end, suffix = '', duration = 1200, start = false, delay = 0 }) {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      setCount(end);
+      return;
+    }
+
+    if (!start) return;
+
+    let startTimestamp = null;
+    let animationFrame;
+    let timeout;
+
+    const startAnimation = () => {
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        
+        // easeOutCubic
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        
+        setCount(Math.floor(easeProgress * end));
+        
+        if (progress < 1) {
+          animationFrame = requestAnimationFrame(step);
+        } else {
+          setCount(end);
+        }
+      };
+      
+      animationFrame = requestAnimationFrame(step);
+    };
+
+    if (delay > 0) {
+      timeout = setTimeout(startAnimation, delay);
+    } else {
+      startAnimation();
+    }
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    };
+  }, [end, duration, start, delay]);
+
+  return <>{count}{suffix}</>;
+}
+
+
 
 // Typing Animation Component
 function TitleLine({ line }) {
@@ -73,7 +125,7 @@ function TitleLine({ line }) {
     return (
       <p
         className="mb-5 flex flex-wrap items-center justify-center lg:justify-start gap-x-2 gap-y-1"
-        style={{ ...fu(0.22), fontFamily: 'var(--font-body)' }}
+        style={{ fontFamily: 'var(--font-body)' }}
       >
         {parts.map((part, i) => (
           <span key={part} className="flex items-center gap-2">
@@ -103,7 +155,7 @@ function TitleLine({ line }) {
   return (
     <p
       className="mb-6 flex flex-wrap lg:flex-nowrap items-center justify-center lg:justify-start gap-x-2 gap-y-1 lg:whitespace-nowrap"
-      style={{ ...fu(0.22), fontFamily: 'var(--font-body)' }}
+      style={{ fontFamily: 'var(--font-body)' }}
     >
       <span className="whitespace-nowrap" style={{ color: 'var(--color-muted)', fontSize: 'clamp(0.85rem, 3.5vw, 1.1rem)', fontWeight: 500 }}>
         Building brands through
@@ -139,6 +191,48 @@ export default function Hero() {
   const [cvOpen, setCvOpen] = useState(false);
   const { intro, firstName, lastName, titleLine, description, cta, stats, tools } = heroData;
 
+  const heroRef = useRef(null);
+  const [startCount, setStartCount] = useState(false);
+
+  useEffect(() => {
+    // Force scroll to top on refresh
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      setStartCount(true);
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      gsap.set('.hero-intro', { opacity: 0, y: -18 });
+      gsap.set('.hero-name', { opacity: 0, y: 34, filter: 'blur(10px)' });
+      gsap.set('.hero-titleline', { opacity: 0, y: 20 });
+      gsap.set('.hero-desc', { opacity: 0, y: 22 });
+      gsap.set('.hero-btn', { opacity: 0, y: 18, scale: 0.96 });
+      gsap.set('.hero-stat', { opacity: 0, y: 20 });
+      gsap.set('.hero-orbit', { opacity: 0, scale: 0.92, rotation: -3, filter: 'blur(8px)' });
+
+      tl.to('.hero-intro', { opacity: 1, y: 0, duration: 0.7 })
+        .to('.hero-name', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1 }, "-=0.4")
+        .to('.hero-titleline', { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
+        .to('.hero-desc', { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
+        .to('.hero-btn', { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.12 }, "-=0.6")
+        .to('.hero-stat', { 
+          opacity: 1, y: 0, duration: 0.8, stagger: 0.12,
+          onComplete: () => setStartCount(true)
+        }, "-=0.6")
+        .to('.hero-orbit', { opacity: 1, scale: 1, rotation: 0, filter: 'blur(0px)', duration: 1.1 }, "-=0.8");
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
   // Generate particles only once
   const particles = useMemo(() => {
     return Array.from({ length: 35 }).map((_, i) => {
@@ -156,6 +250,7 @@ export default function Hero() {
     <>
       <section
         id="home"
+        ref={heroRef}
         className="relative min-h-screen flex items-center overflow-hidden"
         style={{ paddingTop: '140px', paddingBottom: '100px' }}
       >
@@ -194,18 +289,21 @@ export default function Hero() {
             ══════════════════════════════════════ */}
             <div className="w-full text-center lg:text-left mx-auto lg:mx-0 max-w-[600px] lg:max-w-none">
               {/* Intro */}
-              <p
-                className="text-sm sm:text-base font-medium tracking-widest uppercase mb-3"
-                style={{ ...fu(0), fontFamily: 'var(--font-body)', color: 'var(--color-muted)' }}
-              >
-                {intro}
-              </p>
+              <div className="hero-intro">
+                <p
+                  className="text-sm sm:text-base font-medium tracking-widest uppercase mb-3"
+                  style={{ fontFamily: 'var(--font-body)', color: 'var(--color-muted)' }}
+                >
+                  {intro}
+                </p>
+              </div>
 
               {/* ── Name: Ikram Raza — one line on desktop ── */}
-              <h1
-                className="leading-none mb-5 lg:whitespace-nowrap flex flex-wrap justify-center lg:justify-start gap-x-3 sm:gap-x-4"
-                style={{ fontFamily: 'var(--font-heading)', ...fu(0.10) }}
-              >
+              <div className="hero-name">
+                <h1
+                  className="leading-none mb-5 lg:whitespace-nowrap flex flex-wrap justify-center lg:justify-start gap-x-3 sm:gap-x-4"
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                >
                 <span
                   style={{
                     color: 'var(--color-text)',
@@ -223,35 +321,38 @@ export default function Hero() {
                     {lastName}
                   </span>
                 </span>
-              </h1>
+                </h1>
+              </div>
 
               {/* ── Combined roles line ── */}
-              <TitleLine line={titleLine} />
+              <div className="hero-titleline">
+                <TitleLine line={titleLine} />
+              </div>
 
               {/* Description */}
-              <p
-                className="mb-8 mx-auto lg:mx-0 px-2 sm:px-0"
-                style={{
-                  ...fu(0.30),
-                  fontFamily: 'var(--font-body)',
-                  color: 'var(--color-muted)',
-                  fontSize: 'clamp(0.85rem, 3.5vw, 0.95rem)',
-                  lineHeight: 1.65,
-                  maxWidth: '540px',
-                }}
-              >
-                {description}
-              </p>
+              <div className="hero-desc">
+                <p
+                  className="mb-8 mx-auto lg:mx-0 px-2 sm:px-0"
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    color: 'var(--color-muted)',
+                    fontSize: 'clamp(0.85rem, 3.5vw, 0.95rem)',
+                    lineHeight: 1.65,
+                    maxWidth: '540px',
+                  }}
+                >
+                  {description}
+                </p>
+              </div>
 
               {/* ── CTA Buttons ── */}
-              <div
-                style={fu(0.38)}
+              <div 
                 className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 sm:gap-4 mb-12 w-full sm:w-auto px-4 sm:px-0"
               >
                 {/* Primary — VIEW MY WORK */}
                 <a
                   href="#portfolio"
-                  className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-[11px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none btn-primary shadow-[0_8px_24px_rgba(245,158,11,0.2)] hover:shadow-[0_12px_40px_rgba(245,158,11,0.35)] hover:-translate-y-0.5 hover:scale-[1.02]"
+                  className="hero-btn w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-[11px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none btn-primary shadow-[0_8px_24px_rgba(245,158,11,0.2)] hover:shadow-[0_12px_40px_rgba(245,158,11,0.35)] hover:-translate-y-0.5 hover:scale-[1.02]"
                   style={{ color: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}
                 >
                   <span
@@ -269,7 +370,7 @@ export default function Hero() {
                 {/* Secondary — DOWNLOAD CV */}
                 <button
                   onClick={() => setCvOpen(true)}
-                  className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-[11px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none bg-(--color-glass) border border-(--color-border) text-(--color-heading) backdrop-blur-sm hover:border-(--color-primary) hover:shadow-[0_8px_24px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]"
+                  className="hero-btn w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-[11px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none bg-(--color-glass) border border-(--color-border) text-(--color-heading) backdrop-blur-sm hover:border-(--color-primary) hover:shadow-[0_8px_24px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]"
                   style={{ fontFamily: 'var(--font-body)' }}
                 >
                   <span
@@ -287,14 +388,11 @@ export default function Hero() {
               </div>
 
               {/* ── Stats ── */}
-              <div
-                style={fu(0.46)}
-                className="grid grid-cols-3 max-w-xl mx-auto lg:mx-0"
-              >
-                {stats.map((stat) => (
+              <div className="grid grid-cols-3 max-w-xl mx-auto lg:mx-0">
+                {stats.map((stat, index) => (
                   <div 
                     key={stat.label} 
-                    className="flex flex-col items-center lg:items-start gap-1 px-2 sm:px-5 lg:px-8 border-r border-(--color-border) last:border-r-0 first:pl-0 last:pr-0"
+                    className="hero-stat flex flex-col items-center lg:items-start gap-1 px-2 sm:px-5 lg:px-8 border-r border-(--color-border) last:border-r-0 first:pl-0 last:pr-0"
                   >
                     <span
                       className="font-bold leading-none"
@@ -308,7 +406,12 @@ export default function Hero() {
                         color: 'transparent'
                       }}
                     >
-                      {stat.value}
+                      <CountUp 
+                        end={parseInt(stat.value, 10)} 
+                        suffix={stat.value.replace(/[0-9]/g, '')} 
+                        start={startCount}
+                        delay={index * 90}
+                      />
                     </span>
                     <span
                       className="font-medium tracking-wide uppercase text-center lg:text-left leading-tight"
@@ -325,8 +428,7 @@ export default function Hero() {
                 RIGHT COLUMN — Animated Orbit Visual
             ══════════════════════════════════════ */}
             <div
-              className="w-full flex flex-col items-center justify-center mt-4 lg:mt-0"
-              style={fu(0.28)}
+              className="hero-orbit w-full flex flex-col items-center justify-center mt-4 lg:mt-0"
             >
               <div
                 className="relative shrink-0 hero-orbit-shell w-[250px] h-[250px] sm:w-[380px] sm:h-[380px] md:w-[420px] md:h-[420px] lg:w-[480px] lg:h-[480px] xl:w-[540px] xl:h-[540px]"

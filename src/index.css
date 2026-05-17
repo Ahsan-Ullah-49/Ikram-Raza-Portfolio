@@ -164,6 +164,16 @@
     background-color: var(--color-primary);
     color: var(--color-bg);
   }
+
+  /* Section Anchor Offset for Sticky Header */
+  #home,
+  #about,
+  #skills,
+  #portfolio,
+  #reviews,
+  #contact {
+    scroll-margin-top: 120px;
+  }
 }
 
 @layer utilities {
@@ -317,6 +327,22 @@
   animation: aboutGlowPulse 8s ease-in-out infinite;
 }
 
+/* ── About Frame Border & Badges ── */
+@keyframes aboutFrameBorderSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes badgeFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+@keyframes badgeShine {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  50%, 100% { transform: translateX(250%) skewX(-20deg); }
+}
+
 /* ── About floating badge pill ── */
 .about-badge {
   display: flex;
@@ -386,7 +412,10 @@
   [style*="heroOrbitSpin"],
   [style*="heroOrbitSpinRev"],
   [style*="toolFloat"],
-  [style*="heroParticleUp"] {
+  [style*="heroParticleUp"],
+  [style*="badgeFloat"],
+  [style*="badgeShine"],
+  [style*="aboutFrameBorderSpin"] {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
