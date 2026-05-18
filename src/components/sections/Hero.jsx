@@ -549,7 +549,7 @@ export default function Hero() {
                                     }}
                                   >
                                     <span 
-                                      className="font-[800] leading-none transition-transform duration-300 group-hover:scale-105" 
+                                      className="font-extrabold leading-none transition-transform duration-300 group-hover:scale-105" 
                                       style={{ 
                                         color: cfg.color, 
                                         fontFamily: 'var(--font-body)', 

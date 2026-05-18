@@ -12,7 +12,7 @@ export const aboutData = {
     href: "#contact"
   },
   mindset: {
-    label: "Creative Mindset",
+    label: "Core Skills",
     heading: "Always Evolving to Create Better Visuals",
     text: "Every project is shaped with attention to story, pacing, design, and audience behavior, so the final content feels intentional rather than ordinary.",
     strengths: [
@@ -46,6 +46,69 @@ export const aboutData = {
         title: "Social Media Marketing",
         meta: "TECHNERDS INC - LAHORE, PAKISTAN",
         text: "Managed social media content, designed campaigns and promotions, and helped improve brand visibility across digital platforms."
+      }
+    ]
+  },
+  tools: {
+    label: "Production Tools",
+    heading: "Software Behind the Final Look",
+    text: "A focused production stack used for editing, motion, design, color, and social media content delivery.",
+    items: [
+      {
+        name: "Adobe Premiere Pro",
+        level: "Professional Editing",
+        percent: 100,
+        color: "#f97316",
+        icon: "premiere"
+      },
+      {
+        name: "Adobe After Effects",
+        level: "Motion Graphics",
+        percent: 95,
+        color: "#38bdf8",
+        icon: "afterEffects"
+      },
+      {
+        name: "Adobe Photoshop",
+        level: "Visual Design",
+        percent: 95,
+        color: "#d946ef",
+        icon: "photoshop"
+      },
+      {
+        name: "Adobe Illustrator",
+        level: "Vector Graphics",
+        percent: 90,
+        color: "#facc15",
+        icon: "illustrator"
+      },
+      {
+        name: "DaVinci Resolve",
+        level: "Color & Finishing",
+        percent: 88,
+        color: "#60a5fa",
+        icon: "davinci"
+      },
+      {
+        name: "Final Cut Pro",
+        level: "Apple Editing",
+        percent: 85,
+        color: "#a3e635",
+        icon: "finalCut"
+      },
+      {
+        name: "Canva",
+        level: "Social Creatives",
+        percent: 100,
+        color: "#f3f4f6",
+        icon: "canva"
+      },
+      {
+        name: "Meta Business Suite",
+        level: "Social Management",
+        percent: 88,
+        color: "#3b82f6",
+        icon: "meta"
       }
     ]
   }

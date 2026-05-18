@@ -82,7 +82,7 @@ export default function TouchTrail() {
           }
         `}
       </style>
-      <div className="fixed inset-0 pointer-events-none z-[9999]" aria-hidden="true">
+      <div className="fixed inset-0 pointer-events-none z-9999" aria-hidden="true">
         {points.map((p) => (
           <div
             key={p.id}

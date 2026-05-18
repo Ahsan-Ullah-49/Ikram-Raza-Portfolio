@@ -58,7 +58,7 @@ export default function CVModal({ isOpen, onClose }) {
   return (
     /* Backdrop */
     <div
-      className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+      className="fixed inset-0 z-10000 flex items-center justify-center p-4"
       style={{ background: 'var(--color-glass)', backdropFilter: 'blur(8px)' }}
       onClick={onClose}
       aria-modal="true"

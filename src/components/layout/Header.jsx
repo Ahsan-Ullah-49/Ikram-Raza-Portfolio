@@ -37,9 +37,9 @@ const ThemeToggle = ({ isDark, onToggle, className = '' }) => (
   <button
     onClick={onToggle}
     aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-    className={`group/theme relative w-10 h-10 flex items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-glass)] text-[var(--color-muted)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] hover:shadow-[0_0_18px_var(--color-glow)] transition-all duration-400 overflow-hidden ${className}`}
+    className={`group/theme relative w-10 h-10 flex items-center justify-center rounded-xl border border-(--color-border) bg-(--color-glass) text-(--color-muted) hover:text-(--color-primary) hover:border-(--color-primary) hover:shadow-[0_0_18px_var(--color-glow)] transition-all duration-400 overflow-hidden ${className}`}
   >
-    <span className="absolute inset-0 rounded-xl bg-linear-to-br from-[var(--color-primary)]/0 to-[var(--color-secondary)]/0 group-hover/theme:from-[var(--color-primary)]/10 group-hover/theme:to-[var(--color-secondary)]/10 transition-all duration-500 pointer-events-none" />
+    <span className="absolute inset-0 rounded-xl bg-linear-to-br from-(--color-primary)/0 to-(--color-secondary)/0 group-hover/theme:from-(--color-primary)/10 group-hover/theme:to-(--color-secondary)/10 transition-all duration-500 pointer-events-none" />
     <span className={`relative z-10 transition-all duration-500 ${isDark ? 'group-hover/theme:rotate-45' : 'group-hover/theme:-rotate-12'}`}>
       {isDark ? <SunIcon /> : <MoonIcon />}
     </span>
@@ -50,6 +50,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     if (isDark) {
@@ -64,10 +65,52 @@ const Header = () => {
   const toggleTheme = () => setIsDark((d) => !d);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    const sectionIds = ["home", "about", "skills", "portfolio", "reviews", "contact"];
+    
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+
+        if (visibleEntries.length > 0) {
+          const mostVisible = visibleEntries.sort(
+            (a, b) => b.intersectionRatio - a.intersectionRatio
+          )[0];
+
+          setActiveSection(mostVisible.target.id);
+        }
+      },
+      {
+        root: null,
+        threshold: [0.25, 0.35, 0.5, 0.65],
+        rootMargin: "-22% 0px -55% 0px",
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+      
+      // Near top fallback
+      if (window.scrollY < 120) {
+        setActiveSection('home');
+      }
+    };
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const handleNavClick = (id) => {
+    setActiveSection(id);
+  };
 
   return (
     <>
@@ -90,8 +133,8 @@ const Header = () => {
 
             {/* ── Logo ── */}
             <div className="shrink-0">
-              <a href="#home" className="group/logo flex items-center gap-0">
-                <span className="font-logo text-xl md:text-2xl font-bold text-[var(--color-heading)] uppercase tracking-[0.06em] md:tracking-[0.08em] whitespace-nowrap transition-all duration-500 group-hover/logo:tracking-[0.12em]">
+              <a href="#home" onClick={() => handleNavClick('home')} className="group/logo flex items-center gap-0">
+                <span className="font-logo text-xl md:text-2xl font-bold text-(--color-heading) uppercase tracking-[0.06em] md:tracking-[0.08em] whitespace-nowrap transition-all duration-500 group-hover/logo:tracking-[0.12em]">
                   IKRAM
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shrink-0 shadow-[0_0_12px_var(--color-glow)] group-hover/logo:scale-150 transition-all duration-500" />
@@ -100,27 +143,33 @@ const Header = () => {
 
             {/* ── Desktop Nav ── */}
             <div className="hidden xl:flex items-center gap-8 xl:gap-10">
-              {navigationLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className={`text-[12px] uppercase tracking-[0.18em] font-medium relative group/link transition-colors duration-300
-                    ${link.label === 'Home' ? 'text-[var(--color-heading)]' : 'text-[var(--color-muted)] hover:text-[var(--color-heading)]'}`}
-                >
-                  <span className="relative z-10">{link.label}</span>
-                  {/* centered underline */}
-                  <span
-                    className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-px gradient-bg transition-all duration-500
-                      ${link.label === 'Home' ? 'w-1/2' : 'w-0 group-hover/link:w-1/2'}`}
-                  />
-                </a>
-              ))}
+              {navigationLinks.map((link) => {
+                const targetId = link.href.slice(1);
+                const isActive = activeSection === targetId;
+
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => handleNavClick(targetId)}
+                    className={`text-[12px] uppercase tracking-[0.18em] font-medium relative group/link transition-colors duration-300
+                      ${isActive ? 'text-(--color-heading)' : 'text-(--color-muted) hover:text-(--color-heading)'}`}
+                  >
+                    <span className="relative z-10">{link.label}</span>
+                    {/* centered underline */}
+                    <span
+                      className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-px gradient-bg transition-all duration-500
+                        ${isActive ? 'w-1/2' : 'w-0 group-hover/link:w-1/2'}`}
+                    />
+                  </a>
+                );
+              })}
             </div>
 
             {/* ── Desktop Right ── */}
             <div className="hidden xl:flex items-center gap-4 shrink-0">
               <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
-              <Button href="#contact" variant="primary" icon={<ArrowRight />}>
+              <Button href="#contact" onClick={() => handleNavClick('contact')} variant="primary" icon={<ArrowRight />}>
                 Book a Call
               </Button>
             </div>
@@ -131,7 +180,7 @@ const Header = () => {
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
                 aria-label="Open menu"
-                className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-glass)] text-[var(--color-heading)] hover:text-[var(--color-primary)] transition-all duration-300"
+                className="w-9 h-9 flex items-center justify-center rounded-xl border border-(--color-border) bg-(--color-glass) text-(--color-heading) hover:text-(--color-primary) transition-all duration-300"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -150,6 +199,8 @@ const Header = () => {
         onClose={() => setIsMobileMenuOpen(false)}
         isDark={isDark}
         onToggleTheme={toggleTheme}
+        activeSection={activeSection}
+        onNavClick={handleNavClick}
       />
     </>
   );

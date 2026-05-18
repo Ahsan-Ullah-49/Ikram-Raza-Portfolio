@@ -1,8 +1,37 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { aboutData } from '../../data/aboutData';
 import aboutImage from '../../assets/aboutnew.png';
+import premiereLogo from '../../assets/logos/premiere.svg';
+import afterEffectsLogo from '../../assets/logos/after-effects.svg';
+import photoshopLogo from '../../assets/logos/photoshop.svg';
+import illustratorLogo from '../../assets/logos/illustrator.svg';
+import davinciLogo from '../../assets/logos/icons8-davinci-resolve-480.svg';
+import finalCutLogo from '../../assets/logos/icons8-final-cut-pro-x-480.svg';
+import canvaLogo from '../../assets/logos/canva-icon.svg';
+import metaLogo from '../../assets/logos/meta-color.svg';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+const toolIcons = {
+  premiere: premiereLogo,
+  afterEffects: afterEffectsLogo,
+  photoshop: photoshopLogo,
+  illustrator: illustratorLogo,
+  davinci: davinciLogo,
+  finalCut: finalCutLogo,
+  canva: canvaLogo,
+  meta: metaLogo
+};
+const logoStyles = {
+  premiere: { width: '32px', height: '32px' },
+  afterEffects: { width: '32px', height: '32px' },
+  photoshop: { width: '32px', height: '32px' },
+  illustrator: { width: '32px', height: '32px' },
+  davinci: { width: '34px', height: '34px' },
+  finalCut: { maxWidth: '36px', maxHeight: '32px' },
+  canva: { maxWidth: '36px', maxHeight: '28px' },
+  meta: { maxWidth: '34px', maxHeight: '28px' }
+};
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -119,6 +148,208 @@ const ProgressBar = ({ label, value, visible, index }) => {
   );
 };
 
+const ToolCard = ({ item, index }) => {
+  const cardRef = useRef(null);
+  const glowRef = useRef(null);
+  const progressRef = useRef(null);
+  const [val, setVal] = useState(0);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    let ctx = gsap.context(() => {
+      if (reducedMotion) {
+        setVal(item.percent);
+        gsap.set(progressRef.current, { width: `${item.percent}%` });
+        gsap.set(cardRef.current, { opacity: 1, scale: 1, rotationY: 0, rotationZ: 0, y: 0 });
+        return;
+      }
+
+      // Pre-set states to avoid flash before scrollTrigger fires
+      gsap.set(cardRef.current, { opacity: 0, scale: 0.5, rotationY: 15, rotationZ: -2, y: 60 });
+      gsap.set(progressRef.current, { width: "0%" });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: cardRef.current,
+          start: 'top 90%',
+          toggleActions: 'play none none none',
+        },
+        onComplete: () => {
+          gsap.to(cardRef.current, {
+            y: "-=12",
+            duration: 2 + Math.random() * 1.5,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+          });
+        }
+      });
+
+      tl.to(cardRef.current, { 
+        opacity: 1, 
+        scale: 1, 
+        rotationY: 0, 
+        rotationZ: 0, 
+        y: 0, 
+        duration: 0.8, 
+        ease: "back.out(1.7)",
+        delay: (index % 4) * 0.1 
+      });
+
+      const obj = { v: 0 };
+      tl.to(obj, {
+        v: item.percent,
+        duration: 1.5,
+        ease: "power3.out",
+        onUpdate: () => setVal(Math.round(obj.v)),
+      }, "-=0.1");
+
+      tl.to(progressRef.current, { 
+        width: `${item.percent}%`, 
+        duration: 1.5, 
+        ease: "power3.out" 
+      }, "<");
+
+    }, cardRef);
+
+    return () => ctx.revert();
+  }, [item.percent, index]);
+
+  const handleMouseEnter = () => {
+    gsap.to(cardRef.current, {
+      scale: 1.04,
+      duration: 0.4,
+      ease: "power2.out",
+      borderColor: `${item.color}55`,
+      boxShadow: `0 14px 42px -12px ${item.color}65`
+    });
+
+    gsap.to(glowRef.current, {
+      opacity: 0.22,
+      scale: 1.1,
+      duration: 0.4,
+      ease: "power2.out"
+    });
+    
+    gsap.to(cardRef.current.querySelector('.icon-box'), {
+      scale: 1.10,
+      duration: 0.4,
+      ease: "power2.out"
+    });
+  };
+
+  const handleMouseLeave = () => {
+    gsap.to(cardRef.current, {
+      scale: 1,
+      duration: 0.4,
+      ease: "power2.out",
+      borderColor: "var(--color-border)",
+      boxShadow: "none"
+    });
+
+    gsap.to(glowRef.current, {
+      opacity: 0,
+      scale: 1,
+      duration: 0.4,
+      ease: "power2.out"
+    });
+    
+    gsap.to(cardRef.current.querySelector('.icon-box'), {
+      scale: 1,
+      duration: 0.4,
+      ease: "power2.out"
+    });
+  };
+
+  return (
+    <div 
+      ref={cardRef} 
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="relative p-6 rounded-3xl flex flex-col gap-5 overflow-hidden group cursor-default"
+      style={{
+        background: 'var(--color-glass)',
+        backdropFilter: 'blur(16px) saturate(180%)',
+        border: '1px solid var(--color-border)',
+        willChange: 'transform',
+      }}
+    >
+      {/* 1. Glow Layer */}
+      <div 
+        ref={glowRef}
+        className="absolute inset-0 pointer-events-none rounded-3xl z-0"
+        style={{
+          background: `radial-gradient(circle at center, ${item.color}, transparent)`,
+          opacity: 0,
+          mixBlendMode: 'screen',
+        }}
+      />
+
+      {/* 2. Top Row: Icon Box & Percent */}
+      <div className="relative z-10 flex items-start justify-between gap-4">
+        <div 
+          className="icon-box w-[52px] h-[52px] rounded-2xl flex items-center justify-center shrink-0 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${item.color}22, rgba(255,255,255,0.03))`,
+            border: `1px solid ${item.color}66`,
+            boxShadow: `0 0 24px ${item.color}30, inset 0 0 18px rgba(255,255,255,0.03)`,
+          }}
+        >
+          {item.icon ? (
+            <img 
+              src={toolIcons[item.icon]} 
+              alt={item.name} 
+              className="object-contain block m-auto transition-transform duration-500"
+              style={{ ...logoStyles[item.icon] }}
+            />
+          ) : (
+            <span className="text-sm font-bold text-(--color-heading)">
+              {item.name.substring(0,2)}
+            </span>
+          )}
+        </div>
+        
+        <div 
+          className="font-mono font-bold text-3xl leading-none pt-[2px]"
+          style={{
+            color: item.color,
+            textShadow: `0 0 18px ${item.color}70, 0 0 34px ${item.color}35`
+          }}
+        >
+          {val}<span className="text-sm opacity-50 ml-0.5">%</span>
+        </div>
+      </div>
+
+      {/* 3. Tool Text */}
+      <div className="relative z-10 flex flex-col gap-1 mt-2">
+        <h4 className="text-[1.05rem] font-bold text-(--color-heading) tracking-tight">
+          {item.name}
+        </h4>
+        <span className="text-[0.7rem] uppercase tracking-wider font-bold text-(--color-muted)">
+          {item.level}
+        </span>
+      </div>
+
+      {/* 4. Progress Bar */}
+      <div className="relative z-10 mt-1">
+        <div className="h-1.5 w-full rounded-full overflow-hidden" style={{ background: 'var(--color-border)' }}>
+          <div 
+            ref={progressRef}
+            className="h-full rounded-full"
+            style={{
+              width: '0%',
+              background: `linear-gradient(90deg, transparent, ${item.color})`,
+              boxShadow: `0 0 16px ${item.color}80, 0 0 28px ${item.color}35`,
+            }}
+          />
+        </div>
+      </div>
+
+    </div>
+  );
+};
+
 const JourneyCard = ({ item }) => {
   const [hover, setHover] = useState(false);
   return (
@@ -197,6 +428,7 @@ const About = () => {
   const introRef = useRef(null);
   const mindsetRef = useRef(null);
   const journeyRef = useRef(null);
+  const toolsRef = useRef(null);
   const aboutSectionRef = useRef(null);
 
   useEffect(() => {
@@ -239,6 +471,8 @@ const About = () => {
                  opacity: 1, y: 0, duration: 0.6, stagger: 0.1,
                  onStart: () => setStartBars(true)
                }, "-=0.6");
+
+
 
       // 3. Journey Timeline
       gsap.set('.journey-header > :nth-child(1)', { opacity: 0, y: -20 });
@@ -479,9 +713,9 @@ const About = () => {
         </div>
 
         {/* ════════════════════════════════════
-            2. CREATIVE STRENGTHS ROW
+            2. CREATIVE STRENGTHS ROW (CORE SKILLS)
         ════════════════════════════════════ */}
-        <div ref={mindsetRef} className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative">
+        <div id="skills" ref={mindsetRef} className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative scroll-mt-32 pt-4">
           
           {/* Left: Mindset */}
           <div className="relative mindset-content">
@@ -526,6 +760,39 @@ const About = () => {
             </div>
           </div>
 
+        </div>
+
+        {/* ════════════════════════════════════
+            2.5. PRODUCTION TOOLS ROW
+        ════════════════════════════════════ */}
+        <div ref={toolsRef} className="flex flex-col gap-10 md:gap-14 pt-12 md:pt-16 relative overflow-visible">
+          {/* Tools Header */}
+          <div className="text-center max-w-2xl mx-auto">
+            <SectionLabel text={aboutData.tools.label} centered={true} />
+            <h3 className="font-heading font-bold text-(--color-heading) leading-[1.2] mb-5" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
+              Software Behind the{' '}
+              <span
+                style={{
+                  background: 'linear-gradient(135deg, #F59E0B, #FB7185, #6366F1)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}
+              >
+                Final Look
+              </span>
+            </h3>
+            <p className="text-(--color-muted) leading-[1.8] text-[1.05rem]">
+              {aboutData.tools.text}
+            </p>
+          </div>
+
+          {/* Tools Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 lg:gap-y-6 overflow-visible w-full pb-4">
+            {aboutData.tools.items.map((item, index) => (
+              <ToolCard key={index} item={item} index={index} />
+            ))}
+          </div>
         </div>
 
         {/* ════════════════════════════════════
