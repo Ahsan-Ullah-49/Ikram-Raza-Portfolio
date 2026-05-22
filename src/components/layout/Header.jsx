@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { navigationLinks } from '../../data/navigationData';
+import React, { useState, useEffect, useRef } from 'react';
+import { navigationLinks, allSectionIds, sectionNavMap } from '../../data/navigationData';
 import MobileMenu from './MobileMenu';
 import Button from '../ui/Button';
 
@@ -50,66 +50,92 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
-  const [activeSection, setActiveSection] = useState('home');
+  // activeNav tracks which nav *label href* (e.g. "about") is highlighted
+  const [activeNav, setActiveNav] = useState('home');
 
+  // ── Theme ────────────────────────────────────────────────────────────────
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light');
+      document.documentElement.setAttribute('data-theme', 'dark');
     } else {
       document.documentElement.classList.add('light');
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
     }
   }, [isDark]);
 
   const toggleTheme = () => setIsDark((d) => !d);
 
-  useEffect(() => {
-    const sectionIds = ["home", "about", "skills", "portfolio", "reviews", "contact"];
-    
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter(Boolean);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
-
-        if (visibleEntries.length > 0) {
-          const mostVisible = visibleEntries.sort(
-            (a, b) => b.intersectionRatio - a.intersectionRatio
-          )[0];
-
-          setActiveSection(mostVisible.target.id);
-        }
-      },
-      {
-        root: null,
-        threshold: [0.25, 0.35, 0.5, 0.65],
-        rootMargin: "-22% 0px -55% 0px",
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, []);
+  // ── Robust Scrollspy (Position based) ───────────────────────────────────
+  const activeNavRef = useRef('home');
+  const sectionsCacheRef = useRef([]);
 
   useEffect(() => {
+    let ticking = false;
+
+    const updateSectionsCache = () => {
+      sectionsCacheRef.current = allSectionIds
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+    };
+
     const onScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-      
-      // Near top fallback
-      if (window.scrollY < 120) {
-        setActiveSection('home');
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+
+          const headerOffset = 140;
+          const scrollPosition = window.scrollY + headerOffset + window.innerHeight * 0.18;
+
+          let currentId = "home";
+
+          for (const section of sectionsCacheRef.current) {
+            if (section.offsetTop <= scrollPosition) {
+              currentId = section.id;
+            }
+          }
+
+          if (window.scrollY < 120) {
+            currentId = "home";
+          }
+
+          const navTarget = sectionNavMap[currentId] ?? currentId;
+          
+          if (navTarget !== activeNavRef.current) {
+            activeNavRef.current = navTarget;
+            setActiveNav(navTarget);
+          }
+
+          ticking = false;
+        });
+        ticking = true;
       }
     };
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+
+    const onResize = () => {
+      updateSectionsCache();
+      onScroll();
+    };
+
+    updateSectionsCache();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
+    
+    // Initial calculation on mount
+    onScroll();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
   }, []);
 
-  const handleNavClick = (id) => {
-    setActiveSection(id);
+  // ── Nav click ────────────────────────────────────────────────────────────
+  const handleNavClick = (navLabel) => {
+    activeNavRef.current = navLabel;
+    setActiveNav(navLabel);
   };
 
   return (
@@ -129,29 +155,29 @@ const Header = () => {
           {/* ambient hover glow */}
           <div className="absolute inset-0 bg-linear-to-r from-transparent via-amber-500/4 to-transparent opacity-0 group-hover/header:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
-          <nav className="relative z-10 flex items-center justify-between gap-4">
+          <nav className="relative z-10 flex items-center justify-between gap-4" aria-label="Main navigation">
 
             {/* ── Logo ── */}
             <div className="shrink-0">
-              <a href="#home" onClick={() => handleNavClick('home')} className="group/logo flex items-center gap-0">
+              <a href="#home" onClick={() => handleNavClick('home')} className="group/logo flex items-center gap-0" aria-label="Ikram Raza – Back to top">
                 <span className="font-logo text-xl md:text-2xl font-bold text-(--color-heading) uppercase tracking-[0.06em] md:tracking-[0.08em] whitespace-nowrap transition-all duration-500 group-hover/logo:tracking-[0.12em]">
                   IKRAM
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shrink-0 shadow-[0_0_12px_var(--color-glow)] group-hover/logo:scale-150 transition-all duration-500" />
+                <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shrink-0 shadow-[0_0_12px_var(--color-glow)] group-hover/logo:scale-150 transition-all duration-500" aria-hidden="true" />
               </a>
             </div>
 
             {/* ── Desktop Nav ── */}
             <div className="hidden xl:flex items-center gap-8 xl:gap-10">
               {navigationLinks.map((link) => {
-                const targetId = link.href.slice(1);
-                const isActive = activeSection === targetId;
+                const navId = link.href.slice(1);
+                const isActive = activeNav === navId;
 
                 return (
                   <a
                     key={link.label}
                     href={link.href}
-                    onClick={() => handleNavClick(targetId)}
+                    onClick={() => handleNavClick(navId)}
                     className={`text-[12px] uppercase tracking-[0.18em] font-medium relative group/link transition-colors duration-300
                       ${isActive ? 'text-(--color-heading)' : 'text-(--color-muted) hover:text-(--color-heading)'}`}
                   >
@@ -160,6 +186,7 @@ const Header = () => {
                     <span
                       className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-px gradient-bg transition-all duration-500
                         ${isActive ? 'w-1/2' : 'w-0 group-hover/link:w-1/2'}`}
+                      aria-hidden="true"
                     />
                   </a>
                 );
@@ -179,11 +206,12 @@ const Header = () => {
               <ThemeToggle isDark={isDark} onToggle={toggleTheme} className="hidden md:flex" />
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                aria-label="Open menu"
+                aria-label="Open navigation menu"
                 className="w-9 h-9 flex items-center justify-center rounded-xl border border-(--color-border) bg-(--color-glass) text-(--color-heading) hover:text-(--color-primary) transition-all duration-300"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  aria-hidden="true">
                   <line x1="3" y1="8" x2="21" y2="8" />
                   <line x1="3" y1="16" x2="21" y2="16" />
                 </svg>
@@ -199,7 +227,7 @@ const Header = () => {
         onClose={() => setIsMobileMenuOpen(false)}
         isDark={isDark}
         onToggleTheme={toggleTheme}
-        activeSection={activeSection}
+        activeNav={activeNav}
         onNavClick={handleNavClick}
       />
     </>

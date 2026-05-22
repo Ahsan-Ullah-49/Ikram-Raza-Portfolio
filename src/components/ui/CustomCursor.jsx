@@ -1,11 +1,11 @@
 import { useEffect, useRef, useCallback } from 'react';
 
 /**
- * CustomCursor — Premium cursor with trail (v4).
+ * CustomCursor — Premium cursor with trail (v5).
  *
  * ✓ Default browser cursor stays visible.
  * ✓ Amber glow dot at cursor tip (lerp 0.82).
- * ✓ 10-dot smooth cinematic trail (chained lerp, fixed DOM nodes).
+ * ✓ Short, smooth cinematic trail (capped distance, fades quickly).
  * ✓ 34px rotating broken-arc ring on clickable hover.
  * ✓ Single RAF loop, no new DOM nodes per frame.
  * ✓ Desktop only — disabled on touch / <768px / prefers-reduced-motion.
@@ -13,25 +13,29 @@ import { useEffect, useRef, useCallback } from 'react';
  */
 
 // ── Constants ────────────────────────────────────────────────────────────────
-const TRAIL_COUNT = 10;
+const TRAIL_COUNT = 6; // Reduced count for shorter trail
 const CLICKABLE =
   'a, button, [role="button"], input, textarea, select, .clickable, [data-cursor="hover"]';
+const MAX_DIST_PER_NODE = 16; // Maximum distance allowed between consecutive nodes (~128px total)
 
 // Lerp helper
 const lerp = (a, b, t) => a + (b - a) * t;
 
+// Distance helper
+const distance = (x1, y1, x2, y2) => Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+
 // Per-dot visual configuration (computed once, not in render)
 const TRAIL_CFG = Array.from({ length: TRAIL_COUNT }, (_, i) => {
   const t       = i / (TRAIL_COUNT - 1);           // 0 → 1
-  const size    = Math.max(1.5, 5 - i * 0.38);     // 5px → ~1.5px
-  const opacity = Math.max(0.05, 0.46 - i * 0.044); // 0.46 → 0.05
-  const factor  = Math.max(0.12, 0.35 - i * 0.015); // lerp speed
+  const size    = Math.max(1.5, 5 - i * 0.5);      // Fade size faster
+  const opacity = Math.max(0.02, 0.4 - i * 0.05); // Fade opacity faster
+  const factor  = Math.max(0.15, 0.4 - i * 0.03); // Faster lerp for tighter follow
 
-  // Color: amber (0-3) → rose (4-6) → indigo (7-9)
+  // Color: amber → rose → indigo
   const rgb =
-    i < 4 ? 'var(--cursor-amber)'   // #F59E0B / #D97706
-    : i < 7 ? 'var(--cursor-rose)'  // #FB7185 / #E11D48
-    : 'var(--cursor-indigo)';       // #6366F1 / #4F46E5
+    i < 3 ? 'var(--cursor-amber)'   // #D97706
+    : i < 6 ? 'var(--cursor-rose)'  // #E11D48
+    : 'var(--cursor-indigo)';       // #4F46E5
 
   return { size, opacity, factor, rgb, t };
 });
@@ -108,15 +112,26 @@ export default function CustomCursor() {
         `translate(${ringPos.current.x}px, ${ringPos.current.y}px)`;
     }
 
-    // — Trail chain (each dot follows the previous one) —
+    // — Trail chain (capped distance) —
     for (let i = 0; i < TRAIL_COUNT; i++) {
       const cfg = TRAIL_CFG[i];
       // Target: trail[0] follows the dot tip, rest follow each other
-      const tx = i === 0 ? dotPos.current.x : trailPos.current[i - 1].x;
-      const ty = i === 0 ? dotPos.current.y : trailPos.current[i - 1].y;
+      let tx = i === 0 ? dotPos.current.x : trailPos.current[i - 1].x;
+      let ty = i === 0 ? dotPos.current.y : trailPos.current[i - 1].y;
 
-      trailPos.current[i].x = lerp(trailPos.current[i].x, tx, cfg.factor);
-      trailPos.current[i].y = lerp(trailPos.current[i].y, ty, cfg.factor);
+      let nextX = lerp(trailPos.current[i].x, tx, cfg.factor);
+      let nextY = lerp(trailPos.current[i].y, ty, cfg.factor);
+
+      // Clamp distance to avoid long ropes on fast moves
+      const dist = distance(nextX, nextY, tx, ty);
+      if (dist > MAX_DIST_PER_NODE) {
+        const ratio = MAX_DIST_PER_NODE / dist;
+        nextX = tx - (tx - nextX) * ratio;
+        nextY = ty - (ty - nextY) * ratio;
+      }
+
+      trailPos.current[i].x = nextX;
+      trailPos.current[i].y = nextY;
 
       const el = trailEls.current[i];
       if (!el) continue;

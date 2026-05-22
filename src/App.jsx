@@ -3,7 +3,8 @@ import Header from './components/layout/Header';
 import CustomCursor from './components/ui/CustomCursor';
 import TouchTrail from './components/ui/TouchTrail';
 import Hero from './components/sections/Hero';
-import About from './components/sections/About';
+import { AboutIntro, JourneySection, SkillsSection, ToolsSection } from './components/sections/About';
+import FeaturedProjects from './components/sections/FeaturedProjects';
 
 function App() {
   useEffect(() => {
@@ -33,7 +34,11 @@ function App() {
 
       <main className="relative z-10">
         <Hero />
-        <About />
+        <AboutIntro />
+        <JourneySection />
+        <FeaturedProjects />
+        <SkillsSection />
+        <ToolsSection />
       </main>
     </div>
   );

@@ -55,57 +55,68 @@
 }
 
 :root[data-theme="light"], .light {
-  --color-bg: #FCF9F2;
-  --color-bg-soft: #F5EFE6;
+  /* ── Surfaces ── */
+  --color-bg: #F8FAFC;
+  --color-bg-soft: #FFF7ED;
 
   --color-surface: #FFFFFF;
-  --color-card: rgba(255, 255, 255, 0.45);
-  --color-glass: rgba(255, 255, 255, 0.35);
+  --color-card: rgba(255, 255, 255, 0.80);
+  --color-glass: rgba(255, 255, 255, 0.72);
 
-  --color-text: #292524;
-  --color-heading: #1C1917;
-  --color-muted: #57534E;
+  /* ── Typography ── */
+  --color-text: #334155;
+  --color-heading: #0F172A;
+  --color-muted: #64748B;
 
-  --color-border: rgba(217, 119, 6, 0.20);
-  --color-border-strong: rgba(217, 119, 6, 0.35);
+  /* ── Borders ── */
+  --color-border: rgba(15, 23, 42, 0.10);
+  --color-border-strong: rgba(15, 23, 42, 0.18);
 
+  /* ── Brand Colors ── */
   --color-primary: #D97706;
   --color-secondary: #E11D48;
   --color-accent: #4F46E5;
 
-  --color-shadow: rgba(217, 119, 6, 0.15);
-  --color-shadow-soft: rgba(217, 119, 6, 0.08);
-  --color-glow: rgba(217, 119, 6, 0.30);
+  /* ── Shadows & Glow ── */
+  --color-shadow: rgba(15, 23, 42, 0.10);
+  --color-shadow-soft: rgba(15, 23, 42, 0.06);
+  --color-glow: rgba(217, 119, 6, 0.25);
 
+  /* ── Gradients ── */
   --gradient-brand: linear-gradient(135deg, #D97706 0%, #E11D48 100%);
   --gradient-text: linear-gradient(135deg, #D97706 0%, #E11D48 58%, #4F46E5 100%);
 
-  --cinematic-bg-1: rgba(217, 119, 6, 0.06);
-  --cinematic-bg-2: rgba(225, 29, 72, 0.05);
-  --cinematic-glow-1: rgba(217, 119, 6, 0.12);
-  --cinematic-glow-2: rgba(225, 29, 72, 0.10);
+  /* ── Cinematic glows ── */
+  --cinematic-bg-1: rgba(217, 119, 6, 0.04);
+  --cinematic-bg-2: rgba(225, 29, 72, 0.03);
+  --cinematic-glow-1: rgba(217, 119, 6, 0.08);
+  --cinematic-glow-2: rgba(225, 29, 72, 0.06);
 
-  --hero-glow-1: rgba(217, 119, 6, 0.20);
-  --hero-glow-2: rgba(225, 29, 72, 0.18);
-  --hero-glow-3: rgba(79, 70, 229, 0.15);
+  /* ── Hero glows ── */
+  --hero-glow-1: rgba(217, 119, 6, 0.18);
+  --hero-glow-2: rgba(225, 29, 72, 0.14);
+  --hero-glow-3: rgba(79, 70, 229, 0.12);
 
-  --orbit-ring-1: rgba(217, 119, 6, 0.34);
-  --orbit-ring-2: rgba(225, 29, 72, 0.22);
-  --orbit-ring-3: rgba(79, 70, 229, 0.20);
-  --orbit-card-shadow: 0 16px 40px rgba(217, 119, 6, 0.15);
+  /* ── Orbit ── */
+  --orbit-ring-1: rgba(217, 119, 6, 0.30);
+  --orbit-ring-2: rgba(225, 29, 72, 0.20);
+  --orbit-ring-3: rgba(79, 70, 229, 0.18);
+  --orbit-card-shadow: 0 12px 32px rgba(15, 23, 42, 0.10);
   --particle-amber: 217, 119, 6;
   --particle-rose: 225, 29, 72;
 
+  /* ── Cursor ── */
   --cursor-amber: 217, 119, 6;
   --cursor-rose: 225, 29, 72;
   --cursor-indigo: 79, 70, 229;
   --cursor-dot: #D97706;
 
-  --bg-gradient: 
-    radial-gradient(circle at 10% 40%, rgba(217, 119, 6, 0.18), transparent 50%),
-    radial-gradient(circle at 90% 20%, rgba(225, 29, 72, 0.15), transparent 55%),
-    radial-gradient(circle at 50% 90%, rgba(79, 70, 229, 0.10), transparent 60%),
-    linear-gradient(135deg, #FCF9F2 0%, #F5EFE6 50%, #FCF9F2 100%);
+  /* ── Background gradient ── */
+  --bg-gradient:
+    radial-gradient(ellipse at 15% 35%, rgba(217, 119, 6, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 20%, rgba(225, 29, 72, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 85%, rgba(79, 70, 229, 0.07) 0%, transparent 55%),
+    linear-gradient(160deg, #F8FAFC 0%, #FFF7ED 45%, #F8FAFC 100%);
 }
 
 /* ── Light Theme Specific Additions ── */
@@ -155,7 +166,7 @@
     color: var(--color-text);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
-    -moz-osx-osx-font-smoothing: grayscale;
+    -moz-osx-font-smoothing: grayscale;
     line-height: 1.6;
     overflow-x: hidden;
   }
@@ -165,11 +176,13 @@
     color: var(--color-bg);
   }
 
-  /* Section Anchor Offset for Sticky Header */
+  /* Section Anchor Offset for Sticky Header – all page sections */
   #home,
   #about,
-  #skills,
+  #journey,
   #portfolio,
+  #skills,
+  #tools,
   #reviews,
   #contact {
     scroll-margin-top: 120px;
@@ -433,3 +446,163 @@
     transform: none !important;
   }
 }
+
+/* ── Scoped Journey Redesign Styles ── */
+.journey-container {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  position: relative;
+  overflow: visible;
+}
+
+@media (min-width: 1024px) {
+  .journey-container {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}
+
+
+
+.journey-compact-card {
+  position: relative;
+  border-radius: 28px;
+  background: var(--color-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border);
+  padding: 20px 24px;
+  height: 100%;
+  min-height: 155px;
+  max-height: 185px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+              box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.journey-compact-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: none;
+  pointer-events: none;
+  z-index: 1;
+}
+
+:root[data-theme="light"] .journey-compact-card::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(245, 158, 11, 0.15),
+    transparent
+  );
+}
+
+.journey-compact-card:hover::before {
+  left: 150%;
+  transition: left 0.8s ease-in-out;
+}
+
+.journey-compact-card:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 16px 36px -10px rgba(245, 158, 11, 0.15), 0 6px 16px -6px rgba(99, 102, 241, 0.1);
+}
+
+@media (max-width: 1023px) {
+  .journey-compact-card {
+    min-height: auto;
+    max-height: none;
+    height: auto;
+    padding: 18px 22px;
+  }
+}
+
+.journey-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 113, 133, 0.05));
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px var(--color-shadow-soft);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: monospace;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  color: var(--color-heading);
+}
+
+.journey-compact-card:hover .journey-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(251, 113, 133, 0.15)) !important;
+  border-color: rgba(245, 158, 11, 0.6) !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.35) !important;
+}
+
+.journey-connector-svg {
+  filter: drop-shadow(0 0 8px rgba(251, 113, 133, 0.15));
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.journey-node-glow {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #FB7185;
+  box-shadow: 0 0 8px #FB7185, 0 0 16px rgba(245, 158, 11, 0.6);
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-compact-card {
+    transform: none !important;
+    transition: none !important;
+  }
+  .journey-compact-card::before {
+    display: none !important;
+  }
+}
+
+/* ── Journey Path Active Node Styles ── */
+.journey-badge.node-active {
+  background: linear-gradient(135deg, #F59E0B, #FB7185) !important;
+  color: #fff !important;
+  box-shadow: 0 0 15px 2px rgba(245, 158, 11, 0.6) !important;
+  border-color: transparent !important;
+}
+
+.journey-mobile-node.node-active {
+  box-shadow: 0 0 15px 2px rgba(245, 158, 11, 0.6) !important;
+  background-color: #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+.journey-desktop-node.node-active {
+  box-shadow: 0 0 15px 2px rgba(245, 158, 11, 0.6) !important;
+  background-color: #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+.card-active-glow > div {
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  box-shadow: 0 12px 30px -10px rgba(245, 158, 11, 0.15), 0 4px 12px -4px rgba(99, 102, 241, 0.1) !important;
+}
+

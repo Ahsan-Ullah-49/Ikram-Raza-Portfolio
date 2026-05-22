@@ -22,6 +22,8 @@ export const heroData = {
     { code: "AI", name: "Illustrator", color: "#FB923C" },
     { code: "Canva", name: "Canva", color: "#22D3EE" },
     { code: "Meta", name: "Business Suite", color: "#3B82F6" },
+    { code: "DR", name: "DaVinci Resolve", color: "#EF4444" },
+    { code: "FCP", name: "Final Cut Pro", color: "#FDE047" },
   ],
   // ── Replace this path after uploading the real CV PDF ──
   cvPdfPath: "/cv/Ikram_Raza_CV.pdf",

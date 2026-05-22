@@ -1,16 +1,38 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { heroData } from '../../data/heroData';
 import CVModal from '../ui/CVModal';
 import gsap from 'gsap';
 
+import premiereLogo from '../../assets/logos/premiere.svg';
+import afterEffectsLogo from '../../assets/logos/after-effects.svg';
+import photoshopLogo from '../../assets/logos/photoshop.svg';
+import illustratorLogo from '../../assets/logos/illustrator.svg';
+import canvaLogo from '../../assets/logos/canva-icon.svg';
+import metaLogo from '../../assets/logos/meta-color.svg';
+import davinciLogo from '../../assets/logos/icons8-davinci-resolve-480.svg';
+import fcpLogo from '../../assets/logos/icons8-final-cut-pro-x-480.svg';
+
+const LOGO_MAP = {
+  'PR': premiereLogo,
+  'AE': afterEffectsLogo,
+  'PS': photoshopLogo,
+  'AI': illustratorLogo,
+  'Canva': canvaLogo,
+  'Meta': metaLogo,
+  'DR': davinciLogo,
+  'FCP': fcpLogo,
+};
+
 // ── Orbit tool card configurations ──────────────────────────────────────────
 const TOOLS_ORBIT_CONFIG = [
   { angle: 0,   duration: '46s', color: '#60A5FA', rgb: '96,165,250' },  // PR
-  { angle: 60,  duration: '46s', color: '#A78BFA', rgb: '167,139,250' }, // AE
-  { angle: 120, duration: '46s', color: '#38BDF8', rgb: '56,189,248' },  // PS
-  { angle: 180, duration: '46s', color: '#FB923C', rgb: '251,146,60' },  // AI
-  { angle: 240, duration: '46s', color: '#22D3EE', rgb: '34,211,238' },  // Canva
-  { angle: 300, duration: '46s', color: '#3B82F6', rgb: '59,130,246' },  // Meta
+  { angle: 45,  duration: '46s', color: '#A78BFA', rgb: '167,139,250' }, // AE
+  { angle: 90,  duration: '46s', color: '#38BDF8', rgb: '56,189,248' },  // PS
+  { angle: 135, duration: '46s', color: '#FB923C', rgb: '251,146,60' },  // AI
+  { angle: 180, duration: '46s', color: '#22D3EE', rgb: '34,211,238' },  // Canva
+  { angle: 225, duration: '46s', color: '#3B82F6', rgb: '59,130,246' },  // Meta
+  { angle: 270, duration: '46s', color: '#EF4444', rgb: '239,68,68' },   // DR
+  { angle: 315, duration: '46s', color: '#FDE047', rgb: '253,224,71' },  // FCP
 ];
 
 // Local CountUp Animation Component
@@ -525,12 +547,12 @@ export default function Hero() {
                                   
                                   {/* ── Actual Tool Card ── */}
                                   <div
-                                    className="group flex flex-col items-center justify-center rounded-xl cursor-default pointer-events-auto text-center"
+                                    className="group flex flex-col items-center justify-center rounded-full cursor-default pointer-events-auto text-center relative overflow-hidden"
                                     title={`${tool.code} - ${tool.name}`}
                                     style={{
-                                      width: 'clamp(66px, 10vw, 102px)',
-                                      height: 'clamp(38px, 6vw, 58px)',
-                                      padding: '6px 4px',
+                                      width: 'clamp(48px, 9vw, 62px)',
+                                      height: 'clamp(48px, 9vw, 62px)',
+                                      padding: '4px',
                                       background: 'var(--color-glass)',
                                       border: `1px solid rgba(${cfg.rgb}, 0.25)`,
                                       backdropFilter: 'blur(12px)',
@@ -548,30 +570,35 @@ export default function Hero() {
                                       e.currentTarget.style.borderColor = `rgba(${cfg.rgb}, 0.25)`;
                                     }}
                                   >
-                                    <span 
-                                      className="font-extrabold leading-none transition-transform duration-300 group-hover:scale-105" 
-                                      style={{ 
-                                        color: cfg.color, 
-                                        fontFamily: 'var(--font-body)', 
-                                        fontSize: 'clamp(11px, 1.8vw, 17px)',
-                                        letterSpacing: '0.02em',
-                                      }}
-                                    >
-                                      {tool.code}
-                                    </span>
-                                    <span 
-                                      className="font-medium leading-[1.1] transition-transform duration-300 group-hover:scale-105" 
-                                      style={{ 
-                                        color: 'var(--color-muted)', 
-                                        fontFamily: 'var(--font-body)', 
-                                        fontSize: 'clamp(6px, 1vw, 10px)',
-                                        marginTop: '3px',
-                                        wordBreak: 'break-word',
-                                        maxWidth: '100%'
-                                      }}
-                                    >
-                                      {tool.name}
-                                    </span>
+                                    <div className="absolute inset-0 rounded-full bg-[rgba(255,255,255,0.04)] dark:bg-[rgba(255,255,255,0.02)] pointer-events-none" />
+                                    {LOGO_MAP[tool.code] ? (
+                                      <img 
+                                        src={LOGO_MAP[tool.code]} 
+                                        alt={tool.name} 
+                                        className="block object-contain transition-transform duration-300 group-hover:scale-110 relative z-10 m-auto"
+                                        style={{
+                                          width: 'clamp(26px, 4.5vw, 34px)',
+                                          height: 'clamp(26px, 4.5vw, 34px)',
+                                          maxWidth: (tool.code === 'Canva' || tool.code === 'Meta' || tool.code === 'FCP') ? '36px' : '34px',
+                                          maxHeight: (tool.code === 'Canva' || tool.code === 'Meta') ? '30px' : (tool.code === 'FCP' ? '32px' : '34px'),
+                                        }}
+                                      />
+                                    ) : (
+                                      <>
+                                        <span 
+                                          className="font-extrabold leading-none transition-transform duration-300 group-hover:scale-105" 
+                                          style={{ 
+                                            color: cfg.color, 
+                                            fontFamily: 'var(--font-body)', 
+                                            fontSize: 'clamp(11px, 1.8vw, 17px)',
+                                            letterSpacing: '0.02em',
+                                          }}
+                                        >
+                                          {tool.code}
+                                        </span>
+                                        {/* TODO: Replace with original logo asset when available */}
+                                      </>
+                                    )}
                                   </div>
 
                                 </div>

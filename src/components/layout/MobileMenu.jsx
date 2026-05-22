@@ -32,7 +32,8 @@ const MoonIcon = ({ size = 16 }) => (
   </svg>
 );
 
-const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme, activeSection, onNavClick }) => {
+// activeNav: the nav href-id that is currently active (e.g. "about", "portfolio")
+const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme, activeNav, onNavClick }) => {
   return (
     <div
       className={`fixed inset-0 z-60 transition-all duration-500
@@ -47,28 +48,32 @@ const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme, activeSection, onN
 
       {/* Drawer */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
         className={`absolute right-0 top-0 h-full w-full max-w-[320px] flex flex-col
           bg-(--color-surface)/98 backdrop-blur-2xl border-l border-(--color-border)
           transform transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {/* decorative glows */}
-        <div className="absolute top-1/4 right-0 w-48 h-48 bg-(--color-primary)/5 blur-[80px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-1/3 -left-10 w-48 h-48 bg-(--color-secondary)/5 blur-[80px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/4 right-0 w-48 h-48 bg-(--color-primary)/5 blur-[80px] rounded-full pointer-events-none" aria-hidden="true" />
+        <div className="absolute bottom-1/3 -left-10 w-48 h-48 bg-(--color-secondary)/5 blur-[80px] rounded-full pointer-events-none" aria-hidden="true" />
 
         {/* ── Header row ── */}
         <div className="relative z-10 flex items-center justify-between px-7 pt-7 pb-5 border-b border-(--color-border)">
-          <a href="#home" onClick={() => { if (onNavClick) onNavClick('home'); onClose(); }} className="flex items-center gap-0">
+          <a href="#home" onClick={() => { if (onNavClick) onNavClick('home'); onClose(); }} className="flex items-center gap-0" aria-label="Home">
             <span className="font-logo text-lg font-bold text-(--color-heading) uppercase tracking-[0.22em]">IKRAM</span>
-            <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shadow-[0_0_10px_var(--color-glow)]" />
+            <span className="w-1.5 h-1.5 rounded-full gradient-bg mt-1.5 ml-[3px] shadow-[0_0_10px_var(--color-glow)]" aria-hidden="true" />
           </a>
           <button
             onClick={onClose}
-            aria-label="Close menu"
+            aria-label="Close navigation menu"
             className="w-8 h-8 flex items-center justify-center rounded-xl border border-(--color-border) bg-(--color-glass) text-(--color-muted) hover:text-(--color-heading) hover:border-(--color-border-strong) transition-all duration-300"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -76,17 +81,17 @@ const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme, activeSection, onN
         </div>
 
         {/* ── Nav links ── */}
-        <nav className="relative z-10 flex flex-col px-7 pt-8 gap-0.5">
+        <nav className="relative z-10 flex flex-col px-7 pt-8 gap-0.5" aria-label="Mobile navigation">
           {navigationLinks.map((link, i) => {
-            const targetId = link.href.slice(1);
-            const isActive = activeSection === targetId;
+            const navId = link.href.slice(1);
+            const isActive = activeNav === navId;
 
             return (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={() => {
-                  if (onNavClick) onNavClick(targetId);
+                  if (onNavClick) onNavClick(navId);
                   onClose();
                 }}
                 style={{
@@ -100,7 +105,8 @@ const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme, activeSection, onN
                 <svg
                   className={`w-3 h-3 transition-all duration-300
                     ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0'}`}
-                  viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                  aria-hidden="true">
                   <path d="M1 6h10M7 2l4 4-4 4" />
                 </svg>
               </a>
@@ -111,7 +117,8 @@ const MobileMenu = ({ isOpen, onClose, isDark, onToggleTheme, activeSection, onN
         {/* ── Bottom actions ── */}
         <div className="relative z-10 mt-auto px-7 pb-9 flex flex-col gap-4">
           {/* CTA */}
-          <Button href="#contact" variant="primary" icon={<ArrowRight />} className="w-full justify-center py-4 mt-2">
+          <Button href="#contact" variant="primary" icon={<ArrowRight />} className="w-full justify-center py-4 mt-2"
+            onClick={() => { if (onNavClick) onNavClick('contact'); onClose(); }}>
             Book a Call
           </Button>
 
