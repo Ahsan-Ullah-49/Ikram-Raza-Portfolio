@@ -374,7 +374,7 @@ export default function Hero() {
                 {/* Primary — VIEW MY WORK */}
                 <a
                   href="#portfolio"
-                  className="hero-btn w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-[11px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none btn-primary shadow-[0_8px_24px_rgba(245,158,11,0.2)] hover:shadow-[0_12px_40px_rgba(245,158,11,0.35)] hover:-translate-y-0.5 hover:scale-[1.02]"
+                  className="hero-btn w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-[11px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none btn-primary shadow-[0_8px_24px_var(--color-glow)] hover:shadow-[0_12px_40px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]"
                   style={{ color: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}
                 >
                   <span

@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SectionLabel } from './About';
-import ProjectModal from '../ui/ProjectModal';
 import { longVideos, shortReels, graphicBanners } from '../../data/featuredProjectsData';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const LongVideoCard = ({ video, onOpenModal }) => {
+const LongVideoCard = ({ video, activeLongVideoId, setActiveLongVideoId }) => {
+  const isPlaying = activeLongVideoId === video.id;
+
   return (
     <div className="fp-card group relative p-4 sm:p-5 lg:p-6 rounded-[28px] sm:rounded-[34px] flex flex-col gap-5 overflow-hidden transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1.5 hover:scale-[1.015]"
          style={{
@@ -26,35 +27,83 @@ const LongVideoCard = ({ video, onOpenModal }) => {
 
          {/* Video Wrapper */}
          <div 
-           className="relative w-full aspect-video rounded-xl sm:rounded-2xl overflow-hidden bg-black/60 border border-white/5 z-10 transition-colors duration-500 shadow-inner group-hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] cursor-pointer group-hover:border-[#F59E0B]/30"
-           onClick={onOpenModal}
+           role={!isPlaying ? "button" : undefined}
+           aria-label={!isPlaying ? `Play video ${video.title}` : undefined}
+           tabIndex={!isPlaying ? 0 : -1}
+           onKeyDown={(e) => {
+             if (!isPlaying && (e.key === 'Enter' || e.key === ' ')) {
+               e.preventDefault();
+               setActiveLongVideoId(video.id);
+             }
+           }}
+           className={`relative w-full aspect-video rounded-xl sm:rounded-2xl overflow-hidden bg-black/60 border border-white/5 z-10 transition-colors duration-500 shadow-inner ${isPlaying ? 'cursor-default' : 'cursor-pointer group-hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] group-hover:border-[#F59E0B]/30'}`}
+           onClick={!isPlaying ? () => setActiveLongVideoId(video.id) : undefined}
          >
-             <img 
-                 src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
-                 onError={(e) => { e.currentTarget.src = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`; }}
-                 alt={video.title}
-                 loading="lazy"
-                 decoding="async"
-                 className="absolute inset-0 w-full h-full object-cover transition-all duration-[700ms] group-hover:brightness-110 group-hover:scale-[1.05]"
-             />
-             {/* Play Button Overlay */}
-             <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 shadow-lg"
-                  style={{
-                    background: 'rgba(0,0,0,0.5)',
-                    backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255,255,255,0.2)'
-                  }}
-                >
-                   <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{ background: 'linear-gradient(135deg, #F59E0B, #FB7185, #6366F1)', boxShadow: '0 0 20px rgba(245,158,11,0.5)' }}
-                   />
-                   <svg className="w-7 h-7 text-white ml-1.5 relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
+             {isPlaying ? (
+               <>
+                 <iframe 
+                   src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1&playsinline=1&fs=1`}
+                   title={video.title}
+                   loading="lazy"
+                   allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                   allowFullScreen
+                   className="absolute inset-0 w-full h-full border-none"
+                 />
+                 <button 
+                   onClick={(e) => { e.stopPropagation(); setActiveLongVideoId(null); }}
+                   className="absolute top-3 right-3 z-50 w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white transition-all duration-300 hover:scale-110 focus:outline-none"
+                   style={{ 
+                     background: 'rgba(8,7,11,0.5)', 
+                     backdropFilter: 'blur(12px)',
+                     border: '1px solid rgba(255,255,255,0.15)'
+                   }}
+                   onMouseEnter={(e) => {
+                     e.currentTarget.style.background = 'linear-gradient(135deg, #F59E0B, #FB7185, #6366F1)';
+                     e.currentTarget.style.boxShadow = '0 0 20px rgba(251,113,133,0.5)';
+                     e.currentTarget.style.border = '1px solid transparent';
+                   }}
+                   onMouseLeave={(e) => {
+                     e.currentTarget.style.background = 'rgba(8,7,11,0.5)';
+                     e.currentTarget.style.boxShadow = 'none';
+                     e.currentTarget.style.border = '1px solid rgba(255,255,255,0.15)';
+                   }}
+                   aria-label="Close video"
+                 >
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                    </svg>
-                </div>
-             </div>
+                 </button>
+               </>
+             ) : (
+               <>
+                 <img 
+                     src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
+                     onError={(e) => { e.currentTarget.src = `https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`; }}
+                     alt={video.title}
+                     loading="lazy"
+                     decoding="async"
+                     className="absolute inset-0 w-full h-full object-cover transition-all duration-[700ms] group-hover:brightness-110 group-hover:scale-[1.05]"
+                 />
+                 {/* Play Button Overlay */}
+                 <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                    <div 
+                      className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 shadow-lg"
+                      style={{
+                        background: 'rgba(0,0,0,0.5)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid rgba(255,255,255,0.2)'
+                      }}
+                    >
+                       <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                            style={{ background: 'linear-gradient(135deg, #F59E0B, #FB7185, #6366F1)', boxShadow: '0 0 20px rgba(245,158,11,0.5)' }}
+                       />
+                       <svg className="w-7 h-7 text-white ml-1.5 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                       </svg>
+                    </div>
+                 </div>
+               </>
+             )}
          </div>
 
          {/* Content */}
@@ -75,8 +124,10 @@ const ShortReelCard = ({ reel, activeShortId, setActiveShortId }) => {
 
   return (
     <div 
+         role="button"
+         aria-label={`Play short ${reel.title}`}
          onClick={!isPlaying ? () => setActiveShortId(reel.id) : undefined} 
-         tabIndex={0}
+         tabIndex={!isPlaying ? 0 : -1}
          onKeyDown={(e) => {
            if (e.key === 'Enter' || e.key === ' ') {
              e.preventDefault();
@@ -118,7 +169,8 @@ const ShortReelCard = ({ reel, activeShortId, setActiveShortId }) => {
                <iframe 
                    src={`https://www.youtube.com/embed/${reel.youtubeId}?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1&playsinline=1&fs=1`}
                    title={reel.title}
-                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                   loading="lazy"
+                   allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                    allowFullScreen
                    className="absolute inset-0 w-full h-full border-none"
                />
@@ -301,8 +353,8 @@ const GraphicBannerCard = ({ banner, index }) => (
 
 export default function FeaturedProjects() {
   const sectionRef = useRef(null);
-  const [modalProject, setModalProject] = useState(null);
   const [activeShortId, setActiveShortId] = useState(null);
+  const [activeLongVideoId, setActiveLongVideoId] = useState(null);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -429,7 +481,12 @@ export default function FeaturedProjects() {
             {/* Row 2: Long Videos */}
             <div className="fp-long-row grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {longVideos.map((video) => (
-                <LongVideoCard key={video.id} video={video} onOpenModal={() => setModalProject(video)} />
+                <LongVideoCard 
+                  key={video.id} 
+                  video={video} 
+                  activeLongVideoId={activeLongVideoId}
+                  setActiveLongVideoId={setActiveLongVideoId}
+                />
               ))}
             </div>
 
@@ -452,23 +509,11 @@ export default function FeaturedProjects() {
             </p>
             <a
               href="/portfolio"
-              className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-[11px] tracking-[0.2em] uppercase overflow-hidden select-none"
+              className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-[11px] tracking-[0.2em] uppercase overflow-hidden select-none btn-primary shadow-[0_8px_24px_var(--color-glow)] hover:shadow-[0_12px_40px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]"
               style={{
                 fontFamily: 'var(--font-body)',
-                background: 'var(--gradient-brand, linear-gradient(135deg, #F59E0B, #FB7185, #6366F1))',
                 color: 'var(--color-bg, #08070b)',
-                boxShadow: '0 6px 20px rgba(245,158,11,0.22)',
-                transition: 'transform 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 12px 32px rgba(245,158,11,0.35)';
-                e.currentTarget.style.filter = 'brightness(1.08)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = '';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(245,158,11,0.22)';
-                e.currentTarget.style.filter = '';
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
               }}
             >
               <span
@@ -486,9 +531,6 @@ export default function FeaturedProjects() {
 
         </div>
       </section>
-
-      {/* Video Modal (still retained in case long videos or designs needed it, though currently unused as instructed) */}
-      <ProjectModal project={modalProject} onClose={() => setModalProject(null)} />
     </>
   );
 }

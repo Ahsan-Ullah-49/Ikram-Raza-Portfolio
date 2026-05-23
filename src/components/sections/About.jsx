@@ -175,15 +175,6 @@ const ToolCard = ({ item, index }) => {
           start: 'top 90%',
           toggleActions: 'play none none none',
         },
-        onComplete: () => {
-          gsap.to(cardRef.current, {
-            y: "-=12",
-            duration: 2 + Math.random() * 1.5,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-          });
-        }
       });
 
       tl.to(cardRef.current, { 
@@ -194,7 +185,11 @@ const ToolCard = ({ item, index }) => {
         y: 0, 
         duration: 0.8, 
         ease: "back.out(1.7)",
-        delay: (index % 4) * 0.1 
+        delay: (index % 4) * 0.1,
+        onComplete: () => {
+          // Use CSS animation instead of GSAP repeat for better performance
+          if (cardRef.current) cardRef.current.classList.add('tool-card-float');
+        }
       });
 
       const obj = { v: 0 };
@@ -489,7 +484,7 @@ export const AboutIntro = () => {
               <div className="relative z-10 rounded-4xl p-0.5 overflow-hidden bg-(--color-border)" style={{ aspectRatio: '4/5', boxShadow: '0 24px 60px rgba(0,0,0,0.3)' }}>
                 <div className="absolute inset-[-50%] pointer-events-none opacity-100" style={{ background: 'conic-gradient(from 0deg, #F59E0B 0%, #FB7185 25%, #6366F1 50%, #FB7185 75%, #F59E0B 100%)', animation: 'aboutFrameBorderSpin 7s linear infinite' }} />
                 <div className="w-full h-full rounded-[calc(2rem-1px)] overflow-hidden relative group bg-(--color-surface) z-10">
-                  <img src={aboutImage} alt={aboutData.imageAlt} className="w-full h-full object-cover object-[center_top] transition-transform duration-700 group-hover:scale-105" />
+                  <img src={aboutImage} alt={aboutData.imageAlt} loading="lazy" decoding="async" className="w-full h-full object-cover object-[center_top] transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(8,7,11,0.5) 0%, transparent 40%)' }} />
                   <div className="absolute inset-0 pointer-events-none rounded-[calc(2rem-1px)]" style={{ boxShadow: 'inset 0 0 40px rgba(0,0,0,0.2)' }} />
                 </div>
@@ -527,7 +522,7 @@ export const AboutIntro = () => {
               </p>
             </div>
             <div className="flex justify-center lg:justify-start">
-              <a href="#contact" className="group relative inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-[12px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none btn-primary shadow-[0_8px_24px_rgba(245,158,11,0.2)] hover:shadow-[0_12px_40px_rgba(245,158,11,0.35)] hover:-translate-y-0.5 hover:scale-[1.01]" style={{ color: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
+              <a href="#contact" className="group relative inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-[12px] tracking-[0.22em] uppercase overflow-hidden transition-all duration-300 select-none btn-primary shadow-[0_8px_24px_var(--color-glow)] hover:shadow-[0_12px_40px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]" style={{ color: 'var(--color-bg)', fontFamily: 'var(--font-body)' }}>
                 <span aria-hidden="true" className="absolute inset-0 -translate-x-full bg-linear-to-r from-white/0 via-white/20 to-white/0 group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none" />
                 <span className="relative z-10">Let’s Work Together</span>
                 <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
@@ -617,9 +612,9 @@ export const JourneySection = () => {
           <div className="journey-header-label">
             <SectionLabel text={aboutData.journey.label} centered={true} />
           </div>
-          <h3 className="journey-header-heading font-heading font-bold text-(--color-heading) leading-[1.2] mb-6" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
+          <h2 className="journey-header-heading font-heading font-bold text-(--color-heading) leading-[1.2] mb-6" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
             A Creative Journey Across Editing, Design & <span className="gradient-text">Digital Content</span>
-          </h3>
+          </h2>
           <p className="journey-header-text text-(--color-muted) leading-[1.8] text-[1.05rem]">
             {aboutData.journey.text}
           </p>
@@ -673,9 +668,9 @@ export const SkillsSection = () => {
           <div className="relative mindset-content">
             <div className="absolute -top-10 -left-10 w-64 h-64 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%)' }} />
             <SectionLabel text={aboutData.mindset.label} />
-            <h3 className="font-heading font-bold text-(--color-heading) leading-tight mb-5" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
+            <h2 className="font-heading font-bold text-(--color-heading) leading-tight mb-5" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
               Always Evolving to Create <span className="gradient-text">Better Visuals</span>
-            </h3>
+            </h2>
             <p className="text-(--color-muted) leading-[1.8] text-[1.05rem]">
               {aboutData.mindset.text}
             </p>
@@ -700,12 +695,12 @@ export const ToolsSection = () => {
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 flex flex-col gap-10 md:gap-14 overflow-visible">
         <div className="text-center max-w-2xl mx-auto">
           <SectionLabel text={aboutData.tools.label} centered={true} />
-          <h3 className="font-heading font-bold text-(--color-heading) leading-[1.2] mb-5" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
+          <h2 className="font-heading font-bold text-(--color-heading) leading-[1.2] mb-5" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
             Software Behind the{' '}
             <span style={{ background: 'linear-gradient(135deg, #F59E0B, #FB7185, #6366F1)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
               Final Look
             </span>
-          </h3>
+          </h2>
           <p className="text-(--color-muted) leading-[1.8] text-[1.05rem]">
             {aboutData.tools.text}
           </p>

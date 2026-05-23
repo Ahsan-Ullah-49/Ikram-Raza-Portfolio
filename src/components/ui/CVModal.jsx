@@ -202,7 +202,7 @@ export default function CVModal({ isOpen, onClose }) {
             <a
               href={heroData.cvPdfPath}
               download="Ikram_Raza_CV.pdf"
-              className="group relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-xs tracking-[0.18em] uppercase transition-all duration-300 btn-primary"
+              className="group relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-xs tracking-[0.18em] uppercase transition-all duration-300 btn-primary shadow-[0_8px_24px_var(--color-glow)] hover:shadow-[0_12px_40px_var(--color-glow)] hover:-translate-y-0.5 hover:scale-[1.02]"
               style={{
                 fontFamily: 'var(--font-body)',
                 color: 'var(--color-bg)',

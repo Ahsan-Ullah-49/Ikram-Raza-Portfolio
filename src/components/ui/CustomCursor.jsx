@@ -13,10 +13,10 @@ import { useEffect, useRef, useCallback } from 'react';
  */
 
 // ── Constants ────────────────────────────────────────────────────────────────
-const TRAIL_COUNT = 6; // Reduced count for shorter trail
+const TRAIL_COUNT = 10;
 const CLICKABLE =
   'a, button, [role="button"], input, textarea, select, .clickable, [data-cursor="hover"]';
-const MAX_DIST_PER_NODE = 16; // Maximum distance allowed between consecutive nodes (~128px total)
+const MAX_DIST_PER_NODE = 23; // Maximum distance allowed between consecutive nodes (~230px total)
 
 // Lerp helper
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -27,14 +27,14 @@ const distance = (x1, y1, x2, y2) => Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 // Per-dot visual configuration (computed once, not in render)
 const TRAIL_CFG = Array.from({ length: TRAIL_COUNT }, (_, i) => {
   const t       = i / (TRAIL_COUNT - 1);           // 0 → 1
-  const size    = Math.max(1.5, 5 - i * 0.5);      // Fade size faster
-  const opacity = Math.max(0.02, 0.4 - i * 0.05); // Fade opacity faster
-  const factor  = Math.max(0.15, 0.4 - i * 0.03); // Faster lerp for tighter follow
+  const size    = Math.max(1.5, 5 - i * 0.35);     // Smooth size decay
+  const opacity = Math.max(0.02, 0.4 - i * 0.035); // Smooth opacity decay
+  const factor  = Math.max(0.15, 0.4 - i * 0.025); // Smooth follow decay
 
   // Color: amber → rose → indigo
   const rgb =
-    i < 3 ? 'var(--cursor-amber)'   // #D97706
-    : i < 6 ? 'var(--cursor-rose)'  // #E11D48
+    i < 4 ? 'var(--cursor-amber)'   // #D97706
+    : i < 7 ? 'var(--cursor-rose)'  // #E11D48
     : 'var(--cursor-indigo)';       // #4F46E5
 
   return { size, opacity, factor, rgb, t };
