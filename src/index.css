@@ -24,16 +24,21 @@
   --color-glow: rgba(245, 158, 11, 0.15);
 
   --gradient-brand: linear-gradient(135deg, #F59E0B 0%, #FB7185 100%);
-  --gradient-text: linear-gradient(135deg, #F59E0B 0%, #FB7185 58%, #6366F1 100%);
+  --gradient-text: linear-gradient(135deg, #F59E0B 0%, #FB7185 100%);
 
-  --cinematic-bg-1: rgba(99, 102, 241, 0.05);
-  --cinematic-bg-2: rgba(244, 63, 94, 0.05);
-  --cinematic-glow-1: rgba(79, 70, 229, 0.1);
-  --cinematic-glow-2: rgba(225, 29, 72, 0.1);
+  /* Ambient background palette — warm only, no competing hues */
+  --ambient-warm: rgba(245, 158, 11, 0.065);
+  --ambient-soft: rgba(251, 113, 133, 0.045);
+  --ambient-deep: rgba(18, 17, 24, 0.6);
 
-  --hero-glow-1: rgba(245, 158, 11, 0.06);
-  --hero-glow-2: rgba(251, 113, 133, 0.05);
-  --hero-glow-3: rgba(99, 102, 241, 0.04);
+  --cinematic-bg-1: rgba(245, 158, 11, 0.03);
+  --cinematic-bg-2: rgba(251, 113, 133, 0.025);
+  --cinematic-glow-1: rgba(245, 158, 11, 0.06);
+  --cinematic-glow-2: rgba(251, 113, 133, 0.05);
+
+  --hero-glow-1: rgba(245, 158, 11, 0.055);
+  --hero-glow-2: rgba(251, 113, 133, 0.04);
+  --hero-glow-3: rgba(251, 113, 133, 0.03);
 
   --orbit-ring-1: rgba(245,158,11,0.12);
   --orbit-ring-2: rgba(251,113,133,0.12);
@@ -50,7 +55,10 @@
   --font-heading: "Playfair Display", serif;
   --font-body: "Montserrat", Helvetica, Arial, sans-serif;
   
-  --bg-gradient: none;
+  --bg-gradient:
+    radial-gradient(ellipse 90% 55% at 50% -15%, rgba(245, 158, 11, 0.04) 0%, transparent 58%),
+    radial-gradient(ellipse 70% 45% at 85% 75%, rgba(251, 113, 133, 0.025) 0%, transparent 55%),
+    linear-gradient(180deg, #08070B 0%, #0C0B10 48%, #08070B 100%);
 }
 
 :root[data-theme="light"], .light {
@@ -83,18 +91,19 @@
 
   /* ── Gradients ── */
   --gradient-brand: linear-gradient(135deg, #D97706 0%, #E11D48 100%);
-  --gradient-text: linear-gradient(135deg, #D97706 0%, #E11D48 58%, #4F46E5 100%);
+  --gradient-text: linear-gradient(135deg, #D97706 0%, #E11D48 100%);
 
-  /* ── Cinematic glows ── */
-  --cinematic-bg-1: rgba(217, 119, 6, 0.04);
-  --cinematic-bg-2: rgba(225, 29, 72, 0.03);
-  --cinematic-glow-1: rgba(217, 119, 6, 0.08);
-  --cinematic-glow-2: rgba(225, 29, 72, 0.06);
+  --ambient-warm: rgba(217, 119, 6, 0.09);
+  --ambient-soft: rgba(225, 29, 72, 0.06);
 
-  /* ── Hero glows ── */
-  --hero-glow-1: rgba(217, 119, 6, 0.18);
-  --hero-glow-2: rgba(225, 29, 72, 0.14);
-  --hero-glow-3: rgba(79, 70, 229, 0.12);
+  --cinematic-bg-1: rgba(217, 119, 6, 0.035);
+  --cinematic-bg-2: rgba(225, 29, 72, 0.025);
+  --cinematic-glow-1: rgba(217, 119, 6, 0.07);
+  --cinematic-glow-2: rgba(225, 29, 72, 0.05);
+
+  --hero-glow-1: rgba(217, 119, 6, 0.12);
+  --hero-glow-2: rgba(225, 29, 72, 0.09);
+  --hero-glow-3: rgba(225, 29, 72, 0.06);
 
   /* ── Orbit ── */
   --orbit-ring-1: rgba(217, 119, 6, 0.30);
@@ -112,10 +121,9 @@
 
   /* ── Background gradient ── */
   --bg-gradient:
-    radial-gradient(ellipse at 15% 35%, rgba(217, 119, 6, 0.10) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 20%, rgba(225, 29, 72, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 85%, rgba(79, 70, 229, 0.07) 0%, transparent 55%),
-    linear-gradient(160deg, #F8FAFC 0%, #FFF7ED 45%, #F8FAFC 100%);
+    radial-gradient(ellipse 85% 50% at 20% 15%, rgba(217, 119, 6, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 75% 45% at 80% 80%, rgba(225, 29, 72, 0.05) 0%, transparent 52%),
+    linear-gradient(165deg, #F8FAFC 0%, #FFF9F5 42%, #F8FAFC 100%);
 }
 
 /* ── Light Theme Specific Additions ── */
@@ -123,10 +131,9 @@
   background: rgba(255, 255, 255, 0.62);
   box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
   border-radius: 50%;
-  background-image: 
-    radial-gradient(circle at 20% 20%, rgba(217, 119, 6, 0.12), transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(225, 29, 72, 0.08), transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.08), transparent 50%);
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(217, 119, 6, 0.1), transparent 52%),
+    radial-gradient(circle at 75% 75%, rgba(225, 29, 72, 0.07), transparent 52%);
   backdrop-filter: blur(24px);
 }
 
@@ -461,162 +468,509 @@
   }
 }
 
-/* ── Scoped Journey Redesign Styles ── */
-.journey-container {
-  padding-top: 60px;
-  padding-bottom: 60px;
-  position: relative;
-  overflow: visible;
+@keyframes ambientDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 1; }
+  33% { transform: translate(14px, -20px) scale(1.04); }
+  66% { transform: translate(-12px, 16px) scale(0.97); }
 }
 
-@media (min-width: 1024px) {
-  .journey-container {
-    padding-top: 80px;
-    padding-bottom: 80px;
+@keyframes ambientPulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+/* ── Global Site Backdrop (App.jsx) ── */
+.site-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.site-backdrop__base {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-gradient);
+}
+
+.site-backdrop__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: ambientDrift 24s ease-in-out infinite;
+}
+
+.site-backdrop__orb--1 {
+  width: min(680px, 90vw);
+  height: min(680px, 90vw);
+  top: 10%;
+  left: 18%;
+  background: var(--ambient-warm);
+}
+
+.site-backdrop__orb--2 {
+  width: min(580px, 80vw);
+  height: min(580px, 80vw);
+  bottom: 12%;
+  right: 12%;
+  background: var(--ambient-soft);
+  animation-delay: -12s;
+  animation-duration: 28s;
+}
+
+/* ── Section Backdrops — psychology-tuned ambient layers ── */
+.section-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.section-backdrop__mesh {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, black 15%, transparent 72%);
+}
+
+:root[data-theme="light"] .section-backdrop__mesh {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+  opacity: 0.25;
+}
+
+.section-backdrop__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  animation: ambientDrift 20s ease-in-out infinite;
+}
+
+.section-backdrop__orb--primary {
+  background: var(--ambient-warm);
+}
+
+.section-backdrop__orb--secondary {
+  background: var(--ambient-soft);
+  animation-delay: -10s;
+  animation-duration: 26s;
+}
+
+/* Hero — welcome & creative energy (warm gold) */
+.section-backdrop--hero .section-backdrop__orb--primary {
+  width: min(560px, 85vw);
+  height: min(560px, 85vw);
+  top: -8%;
+  left: -6%;
+}
+
+.section-backdrop--hero .section-backdrop__orb--secondary {
+  width: min(480px, 75vw);
+  height: min(480px, 75vw);
+  bottom: -4%;
+  right: 8%;
+}
+
+/* About — trust & authenticity (soft amber) */
+.section-backdrop--about .section-backdrop__orb--primary {
+  width: min(500px, 78vw);
+  height: min(500px, 78vw);
+  top: 5%;
+  left: -10%;
+  opacity: 0.9;
+}
+
+/* Journey — growth & progression (amber → rose flow) */
+.section-backdrop--journey .section-backdrop__orb--primary {
+  width: min(480px, 72vw);
+  height: min(480px, 72vw);
+  top: 8%;
+  left: -8%;
+}
+
+.section-backdrop--journey .section-backdrop__orb--secondary {
+  width: min(440px, 68vw);
+  height: min(440px, 68vw);
+  bottom: 6%;
+  right: -6%;
+}
+
+/* Portfolio — passion & showcase (muted rose) */
+.section-backdrop--portfolio .section-backdrop__orb--primary {
+  width: min(520px, 80vw);
+  height: min(520px, 80vw);
+  top: 20%;
+  right: -12%;
+  background: var(--ambient-soft);
+  animation-duration: 22s;
+}
+
+/* Skills — mastery & competence (centered warm) */
+.section-backdrop--skills .section-backdrop__orb--primary {
+  width: min(460px, 70vw);
+  height: min(460px, 70vw);
+  top: 25%;
+  right: -8%;
+  opacity: 0.85;
+}
+
+/* Tools — precision & calm (minimal bottom glow) */
+.section-backdrop--tools .section-backdrop__orb--primary {
+  width: min(400px, 65vw);
+  height: min(400px, 65vw);
+  bottom: -5%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.75;
+  animation: ambientPulse 16s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-backdrop__orb,
+  .section-backdrop__orb {
+    animation: none !important;
   }
 }
 
-
-
-.journey-compact-card {
+/* ── Journey Section — Modern Professional Timeline ── */
+.journey-timeline-shell {
   position: relative;
-  border-radius: 28px;
-  background: var(--color-glass);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--color-border);
-  padding: 20px 24px;
-  height: 100%;
-  min-height: 155px;
-  max-height: 185px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-              box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-              border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  overflow: hidden;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
+  padding-left: 2.75rem;
 }
 
-.journey-compact-card::before {
-  content: '';
+@media (min-width: 640px) {
+  .journey-timeline-shell {
+    padding-left: 3.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .journey-timeline-shell {
+    padding-left: 0;
+  }
+}
+
+.journey-timeline-track {
   position: absolute;
-  top: 0;
-  left: -150%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.08),
-    transparent
-  );
-  transform: skewX(-25deg);
-  transition: none;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0.9rem;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--color-border);
+  overflow: hidden;
+  z-index: 0;
+}
+
+@media (min-width: 640px) {
+  .journey-timeline-track {
+    left: 1.1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .journey-timeline-track {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.journey-timeline-progress {
+  position: absolute;
+  inset: 0;
+  transform-origin: top center;
+  background: linear-gradient(180deg, #F59E0B 0%, #FB7185 100%);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.28);
+}
+
+.journey-timeline-list {
+  position: relative;
+  z-index: 1;
+}
+
+.journey-milestone {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .journey-milestone {
+    grid-template-columns: minmax(0, 1fr) 2.75rem minmax(0, 1fr);
+  }
+
+  .journey-milestone--left .journey-milestone-card {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    width: calc(100% - 1.25rem);
+    max-width: 420px;
+  }
+
+  .journey-milestone--left .journey-milestone-node-wrap {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+  }
+
+  .journey-milestone--right .journey-milestone-card {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: start;
+    width: calc(100% - 1.25rem);
+    max-width: 420px;
+  }
+
+  .journey-milestone--right .journey-milestone-node-wrap {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+  }
+}
+
+.journey-milestone-node-wrap {
+  position: absolute;
+  left: -2.75rem;
+  top: 1.85rem;
+  z-index: 2;
+}
+
+@media (min-width: 640px) {
+  .journey-milestone-node-wrap {
+    left: -3.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .journey-milestone-node-wrap {
+    position: relative;
+    left: auto;
+    top: auto;
+  }
+}
+
+.journey-milestone-node {
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.45s ease, box-shadow 0.45s ease, transform 0.45s ease;
+}
+
+@media (min-width: 1024px) {
+  .journey-milestone-node {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+}
+
+.journey-milestone-node-core {
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.45s ease, transform 0.45s ease, box-shadow 0.45s ease;
+}
+
+@media (min-width: 1024px) {
+  .journey-milestone-node-core {
+    width: 0.42rem;
+    height: 0.42rem;
+  }
+}
+
+.journey-milestone--active .journey-milestone-node {
+  border-color: rgba(245, 158, 11, 0.65);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+  transform: scale(1.1);
+}
+
+.journey-milestone--active .journey-milestone-node-core {
+  background: linear-gradient(135deg, #F59E0B, #FB7185);
+  box-shadow: 0 0 8px rgba(251, 113, 133, 0.45);
+}
+
+.journey-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--color-glass);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--color-border);
+  padding: 1.35rem 1.45rem;
+  transition:
+    transform 0.55s cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 0.55s ease,
+    box-shadow 0.55s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+  .journey-card {
+    padding: 1.5rem 1.65rem;
+    border-radius: 26px;
+  }
+}
+
+.journey-card-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.07) 0%, transparent 48%, rgba(251, 113, 133, 0.06) 100%);
+  opacity: 0;
+  transition: opacity 0.55s ease;
+  pointer-events: none;
+}
+
+.journey-card-shine {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
   pointer-events: none;
   z-index: 1;
 }
 
-:root[data-theme="light"] .journey-compact-card::before {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(245, 158, 11, 0.15),
-    transparent
-  );
+.journey-card-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+  transform: skewX(-22deg);
+  transition: left 0.85s ease;
 }
 
-.journey-compact-card:hover::before {
-  left: 150%;
-  transition: left 0.8s ease-in-out;
+:root[data-theme="light"] .journey-card-shine::after {
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.12), transparent);
 }
 
-.journey-compact-card:hover {
-  border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 16px 36px -10px rgba(245, 158, 11, 0.15), 0 6px 16px -6px rgba(99, 102, 241, 0.1);
+.journey-card:hover .journey-card-shine::after,
+.journey-card--active .journey-card-shine::after {
+  left: 140%;
 }
 
-@media (max-width: 1023px) {
-  .journey-compact-card {
-    min-height: auto;
-    max-height: none;
-    height: auto;
-    padding: 18px 22px;
+.journey-card-header {
+  margin-bottom: 0.15rem;
+}
+
+.journey-step-badge {
+  font-family: monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.22rem 0.65rem;
+  border-radius: 999px;
+  color: var(--color-heading);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.14), rgba(251, 113, 133, 0.08));
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.journey-company {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: right;
+  background: linear-gradient(135deg, #F59E0B, #FB7185);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.journey-title {
+  font-size: clamp(1.08rem, 1.9vw, 1.22rem);
+  line-height: 1.3;
+  color: var(--color-heading);
+  letter-spacing: -0.01em;
+  transition: color 0.35s ease;
+}
+
+.journey-card:hover .journey-title,
+.journey-card--active .journey-title {
+  background: linear-gradient(135deg, #F59E0B 0%, #FB7185 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.journey-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.journey-location-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  color: rgba(245, 158, 11, 0.75);
+  flex-shrink: 0;
+}
+
+.journey-desc {
+  font-size: 0.86rem;
+  line-height: 1.75;
+  color: var(--color-muted);
+  margin-top: 0.15rem;
+}
+
+@media (min-width: 640px) {
+  .journey-desc {
+    font-size: 0.88rem;
   }
 }
 
-.journey-badge {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 113, 133, 0.05));
-  border: 1px solid var(--color-border);
-  box-shadow: 0 4px 12px var(--color-shadow-soft);
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  font-size: 0.72rem;
-  font-weight: 700;
-  font-family: monospace;
-  padding: 3px 10px;
-  border-radius: 9999px;
-  color: var(--color-heading);
+.journey-card:hover,
+.journey-card--active {
+  transform: translateY(-5px) scale(1.012);
+  border-color: rgba(245, 158, 11, 0.32);
+  box-shadow:
+    0 18px 42px -16px rgba(245, 158, 11, 0.18),
+    0 10px 28px -12px rgba(0, 0, 0, 0.14);
 }
 
-.journey-compact-card:hover .journey-badge {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(251, 113, 133, 0.15)) !important;
-  border-color: rgba(245, 158, 11, 0.6) !important;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.35) !important;
+.journey-card:hover .journey-card-glow,
+.journey-card--active .journey-card-glow {
+  opacity: 1;
 }
 
-.journey-connector-svg {
-  filter: drop-shadow(0 0 8px rgba(251, 113, 133, 0.15));
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.journey-node-glow {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #FB7185;
-  box-shadow: 0 0 8px #FB7185, 0 0 16px rgba(245, 158, 11, 0.6);
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+.journey-card:hover .journey-step-badge,
+.journey-card--active .journey-step-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.24), rgba(251, 113, 133, 0.16));
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .journey-compact-card {
-    transform: none !important;
+  .journey-card,
+  .journey-milestone-node,
+  .journey-milestone-node-core,
+  .journey-step-badge {
     transition: none !important;
+    transform: none !important;
   }
-  .journey-compact-card::before {
+
+  .journey-card-shine::after {
     display: none !important;
   }
-}
-
-/* ── Journey Path Active Node Styles ── */
-.journey-badge.node-active {
-  background: linear-gradient(135deg, #F59E0B, #FB7185) !important;
-  color: #fff !important;
-  box-shadow: 0 0 15px 2px rgba(245, 158, 11, 0.6) !important;
-  border-color: transparent !important;
-}
-
-.journey-mobile-node.node-active {
-  box-shadow: 0 0 15px 2px rgba(245, 158, 11, 0.6) !important;
-  background-color: #F59E0B !important;
-  border-color: #F59E0B !important;
-}
-
-.journey-desktop-node.node-active {
-  box-shadow: 0 0 15px 2px rgba(245, 158, 11, 0.6) !important;
-  background-color: #F59E0B !important;
-  border-color: #F59E0B !important;
-}
-
-.card-active-glow > div {
-  border-color: rgba(245, 158, 11, 0.4) !important;
-  box-shadow: 0 12px 30px -10px rgba(245, 158, 11, 0.15), 0 4px 12px -4px rgba(99, 102, 241, 0.1) !important;
 }
 

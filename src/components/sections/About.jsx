@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { aboutData } from '../../data/aboutData';
 import aboutImage from '../../assets/aboutnew.png';
+import SectionBackdrop from '../ui/SectionBackdrop';
 import premiereLogo from '../../assets/logos/premiere.svg';
 import afterEffectsLogo from '../../assets/logos/after-effects.svg';
 import photoshopLogo from '../../assets/logos/photoshop.svg';
@@ -127,7 +128,7 @@ const ProgressBar = ({ label, value, visible, index }) => {
           className="absolute left-0 top-0 h-full rounded-full transition-all ease-out group-hover:brightness-110 group-hover:shadow-[0_0_15px_rgba(251,113,133,0.6)]"
           style={{
             width: hasAnimated ? `${value}%` : '0%',
-            background: 'linear-gradient(90deg, #F59E0B, #FB7185, #6366F1)',
+            background: 'linear-gradient(90deg, #F59E0B, #FB7185)',
             boxShadow: '0 0 8px rgba(245,158,11,0.4)',
             transitionDuration: '1.4s',
             transitionDelay: `${400 + index * 150}ms`
@@ -350,107 +351,34 @@ const splitMeta = (meta) => {
   return { company: parts[0], location: parts[1] || '' };
 };
 
-const JourneyCard = ({ item, index }) => {
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [hovered, setHovered] = useState(false);
-
-  const handleMouseMove = (e) => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (window.innerWidth < 1024) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const xc = rect.width / 2;
-    const yc = rect.height / 2;
-    // Keep it extremely subtle, max 3 to 4 degrees as per conditions
-    const maxTilt = 3.0;
-    const tiltX = -((y - yc) / yc) * maxTilt;
-    const tiltY = ((x - xc) / xc) * maxTilt;
-
-    setCoords({ x, y });
-    setTilt({ x: tiltX, y: tiltY });
-  };
-
-  const handleMouseEnter = () => {
-    setHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setHovered(false);
-    setTilt({ x: 0, y: 0 });
-  };
-
+const JourneyCard = ({ item, index, side = 'left' }) => {
   const { company, location } = splitMeta(item.meta);
-  const stepNumber = `0${index + 1}`;
+  const stepNumber = String(index + 1).padStart(2, '0');
 
   return (
-    <div className="w-full h-full overflow-visible">
-      <div
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className="journey-compact-card group cursor-default"
-        style={{
-          transform: hovered
-            ? `translateY(-4px) scale(1.01) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`
-            : 'translateY(0) scale(1) rotateX(0deg) rotateY(0deg)',
-          perspective: '1000px',
-        }}
-      >
-        {/* Dynamic inner light spotlight following cursor */}
-        <div
-          className="absolute pointer-events-none rounded-[28px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
-          style={{
-            width: '240px',
-            height: '240px',
-            background: 'radial-gradient(circle, rgba(245,158,11,0.08) 0%, rgba(251,113,133,0.04) 40%, transparent 70%)',
-            left: `${coords.x - 120}px`,
-            top: `${coords.y - 120}px`,
-            mixBlendMode: 'screen',
-            willChange: 'transform'
-          }}
-        />
+    <article className={`journey-card group cursor-default ${side === 'right' ? 'journey-card--right' : 'journey-card--left'}`}>
+      <div className="journey-card-glow" aria-hidden="true" />
+      <div className="journey-card-shine" aria-hidden="true" />
 
-        {/* Top Row: Company & Step Badge */}
-        <div className="flex items-center justify-between gap-3 relative z-10 w-full mb-1">
-          <span 
-            className="text-[0.75rem] font-bold tracking-wider"
-            style={{
-              background: 'linear-gradient(135deg, #F59E0B, #FB7185)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            {company}
-          </span>
-          <div className="journey-badge shrink-0">
-            {stepNumber}
-          </div>
+      <div className="journey-card-content relative z-10 flex flex-col gap-3 sm:gap-3.5">
+        <div className="journey-card-header flex items-center justify-between gap-3">
+          <span className="journey-step-badge">{stepNumber}</span>
+          <span className="journey-company">{company}</span>
         </div>
 
-        {/* Title */}
-        <h4 className="font-heading font-bold text-[1.12rem] leading-[1.2] text-(--color-heading) tracking-tight relative z-10 w-full mb-1">
-          {item.title}
-        </h4>
+        <h4 className="journey-title font-heading font-bold">{item.title}</h4>
 
-        {/* Location & Text Description */}
-        <div className="flex flex-col gap-1 relative z-10 w-full">
-          <span className="text-[0.75rem] text-(--color-muted) font-medium flex items-center gap-1">
-            <svg className="w-3.5 h-3.5 text-(--color-primary)/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            {location}
-          </span>
-          <p className="text-[0.82rem] md:text-[0.85rem] leading-normal text-(--color-muted) mt-1 line-clamp-3">
-            {item.text}
-          </p>
-        </div>
+        <span className="journey-location">
+          <svg className="journey-location-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          {location}
+        </span>
+
+        <p className="journey-desc">{item.text}</p>
       </div>
-    </div>
+    </article>
   );
 };
 
@@ -473,16 +401,14 @@ export const AboutIntro = () => {
 
   return (
     <section id="about" ref={introRef} className="relative py-16 md:py-20 lg:py-24 scroll-mt-28 lg:scroll-mt-32 w-full overflow-x-clip overflow-y-visible">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div style={{ position: 'absolute', top: '10%', left: '-5%', width: '600px', height: '600px', borderRadius: '50%', background: '#F59E0B', opacity: 0.04, filter: 'blur(120px)' }} />
-      </div>
+      <SectionBackdrop variant="about" />
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 flex flex-col overflow-visible">
         <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-14 lg:gap-16 items-center overflow-visible">
           <div className="about-intro-img relative mx-auto lg:mx-0 w-full max-w-97.5 lg:max-w-107.5 order-2 lg:order-1 overflow-visible py-3 px-1">
             <div className="overflow-visible" style={{ animation: 'heroFloat 7s ease-in-out infinite' }}>
               <div className="absolute -bottom-5 -left-5 w-4/5 h-4/5 rounded-4xl z-0 opacity-80" style={{ background: 'linear-gradient(135deg, #F59E0B 0%, #FB7185 100%)', boxShadow: '0 20px 40px rgba(245,158,11,0.2)' }} />
               <div className="relative z-10 rounded-4xl p-0.5 overflow-hidden bg-(--color-border)" style={{ aspectRatio: '4/5', boxShadow: '0 24px 60px rgba(0,0,0,0.3)' }}>
-                <div className="absolute inset-[-50%] pointer-events-none opacity-100" style={{ background: 'conic-gradient(from 0deg, #F59E0B 0%, #FB7185 25%, #6366F1 50%, #FB7185 75%, #F59E0B 100%)', animation: 'aboutFrameBorderSpin 7s linear infinite' }} />
+                <div className="absolute inset-[-50%] pointer-events-none opacity-100" style={{ background: 'conic-gradient(from 0deg, #F59E0B 0%, #FB7185 50%, #F59E0B 100%)', animation: 'aboutFrameBorderSpin 7s linear infinite' }} />
                 <div className="w-full h-full rounded-[calc(2rem-1px)] overflow-hidden relative group bg-(--color-surface) z-10">
                   <img src={aboutImage} alt={aboutData.imageAlt} loading="lazy" decoding="async" className="w-full h-full object-cover object-[center_top] transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(8,7,11,0.5) 0%, transparent 40%)' }} />
@@ -492,7 +418,7 @@ export const AboutIntro = () => {
               <div className="absolute z-20" style={{ top: '32px', left: '-12px', animation: 'badgeFloat 5.5s ease-in-out infinite' }}>
                 <div className="relative flex items-center gap-2.5 px-4 py-2.5 rounded-full overflow-hidden" style={{ background: 'var(--color-glass)', backdropFilter: 'blur(16px)', border: '1px solid var(--color-border)', boxShadow: '0 8px 32px rgba(0,0,0,0.15)' }}>
                   <div className="absolute top-0 bottom-0 w-[50%] pointer-events-none mix-blend-overlay" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', animation: 'badgeShine 3s ease-in-out infinite' }} />
-                  <span className="w-2 h-2 rounded-full relative z-10" style={{ background: '#6366F1', boxShadow: '0 0 10px #6366F1' }} />
+                  <span className="w-2 h-2 rounded-full relative z-10" style={{ background: '#FB7185', boxShadow: '0 0 10px rgba(251,113,133,0.45)' }} />
                   <span className="text-[0.7rem] font-bold tracking-wide text-(--color-heading) whitespace-nowrap relative z-10">Level 2 Fiverr Seller</span>
                 </div>
               </div>
@@ -541,100 +467,205 @@ export const AboutIntro = () => {
 
 export const JourneySection = () => {
   const journeyRef = React.useRef(null);
+  const timelineRef = React.useRef(null);
+
   React.useEffect(() => {
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) return;
     const ctx = gsap.context(() => {
+      const milestones = gsap.utils.toArray('.journey-milestone');
+
+      if (reducedMotion) {
+        gsap.set([
+          '.journey-header-label',
+          '.journey-header-heading',
+          '.journey-header-text',
+          '.journey-timeline-shell',
+          '.journey-timeline-progress',
+          ...milestones,
+        ], { clearProps: 'all' });
+        gsap.set('.journey-timeline-progress', { scaleY: 1, transformOrigin: 'top center' });
+        milestones.forEach((m) => gsap.set(m.querySelectorAll('.journey-card-content > *'), { clearProps: 'all' }));
+        return;
+      }
+
+      gsap.set('.journey-header-label', { opacity: 0, y: -15 });
+      gsap.set('.journey-header-heading', { opacity: 0, y: 22, filter: 'blur(8px)' });
+      gsap.set('.journey-header-text', { opacity: 0, y: 15 });
+      gsap.set('.journey-timeline-shell', { opacity: 0, y: 30 });
+      gsap.set('.journey-timeline-progress', { scaleY: 0, transformOrigin: 'top center' });
+
+      const headerTl = gsap.timeline({
+        scrollTrigger: { trigger: journeyRef.current, start: 'top 80%', toggleActions: 'play none none none' },
+      });
+
+      headerTl
+        .to('.journey-header-label', { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' })
+        .to('.journey-header-heading', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' }, '-=0.45')
+        .to('.journey-header-text', { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }, '-=0.55')
+        .to('.journey-timeline-shell', { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' }, '-=0.4')
+        .to('.journey-timeline-progress', { scaleY: 1, duration: 1.15, ease: 'power2.inOut' }, '-=0.55');
+
       const mm = gsap.matchMedia();
-      mm.add("(min-width: 1024px)", () => {
-        gsap.set('.journey-header-label', { opacity: 0, y: -15 });
-        gsap.set('.journey-header-heading', { opacity: 0, y: 15, filter: 'blur(8px)' });
-        gsap.set('.journey-header-text', { opacity: 0, y: 15 });
-        gsap.set('.journey-board-wrapper', { opacity: 0, y: 30 });
-        const desktopCards = gsap.utils.toArray('.journey-desktop-grid .journey-card-wrapper');
-        desktopCards.forEach((card) => gsap.set(card, { opacity: 0, y: 36, scale: 0.95, filter: 'blur(8px)' }));
-        const journeyTl = gsap.timeline({ scrollTrigger: { trigger: journeyRef.current, start: 'top 80%', toggleActions: 'play none none none' } });
-        journeyTl.to('.journey-header-label', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' })
-                 .to('.journey-header-heading', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.75, ease: 'power3.out' }, "-=0.4")
-                 .to('.journey-header-text', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, "-=0.4")
-                 .to('.journey-board-wrapper', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, "-=0.3");
-        journeyTl.to(desktopCards, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out', stagger: 0.10 }, "-=0.6");
+
+      mm.add('(min-width: 1024px)', () => {
+        milestones.forEach((milestone, i) => {
+          gsap.fromTo(milestone, {
+            opacity: 0,
+            y: 50,
+            x: i % 2 === 0 ? -36 : 36,
+            scale: 0.96,
+            filter: 'blur(10px)',
+          }, {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: milestone,
+              start: 'top 88%',
+              toggleActions: 'play none none none',
+            },
+          });
+
+          gsap.fromTo(milestone.querySelectorAll('.journey-card-content > *'), {
+            opacity: 0,
+            y: 18,
+          }, {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.08,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: milestone,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+          });
+        });
+
         ScrollTrigger.create({
-          trigger: journeyRef.current, start: 'top 50%', end: 'bottom 60%', scrub: true,
+          trigger: timelineRef.current,
+          start: 'top 55%',
+          end: 'bottom 45%',
+          scrub: 0.8,
           onUpdate: (self) => {
-            desktopCards.forEach((card, i) => {
-              const nodeProgress = i / Math.max(1, desktopCards.length - 1);
-              const isActive = self.progress >= nodeProgress - 0.15 && self.progress <= nodeProgress + 0.35;
-              const node = card.querySelector('.journey-desktop-node');
-              if (isActive) { card.classList.add('card-active-glow'); if (node) node.classList.add('node-active'); } 
-              else { card.classList.remove('card-active-glow'); if (node) node.classList.remove('node-active'); }
+            gsap.to('.journey-timeline-progress', { scaleY: self.progress, duration: 0.12, overwrite: true });
+            milestones.forEach((milestone, i) => {
+              const threshold = (i + 0.5) / milestones.length;
+              const isActive = self.progress >= threshold - 0.15;
+              milestone.classList.toggle('journey-milestone--active', isActive);
+              milestone.querySelector('.journey-card')?.classList.toggle('journey-card--active', isActive);
             });
-          }
+          },
         });
       });
-      mm.add("(max-width: 1023px)", () => {
-        gsap.set('.journey-header-label', { opacity: 0, y: -15 });
-        gsap.set('.journey-header-heading', { opacity: 0, y: 15, filter: 'blur(8px)' });
-        gsap.set('.journey-header-text', { opacity: 0, y: 15 });
-        gsap.set('.journey-board-wrapper', { opacity: 0, y: 30 });
-        const mobileCards = gsap.utils.toArray('.journey-mobile-list .journey-card-wrapper');
-        mobileCards.forEach((card) => gsap.set(card, { opacity: 0, y: 30, filter: 'blur(6px)' }));
-        const journeyTl = gsap.timeline({ scrollTrigger: { trigger: journeyRef.current, start: 'top 85%', toggleActions: 'play none none none' } });
-        journeyTl.to('.journey-header-label', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' })
-                 .to('.journey-header-heading', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.75, ease: 'power3.out' }, "-=0.4")
-                 .to('.journey-header-text', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, "-=0.4")
-                 .to('.journey-board-wrapper', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, "-=0.3")
-                 .to(mobileCards, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out', stagger: 0.12 }, "-=0.4");
+
+      mm.add('(max-width: 1023px)', () => {
+        milestones.forEach((milestone) => {
+          gsap.fromTo(milestone, {
+            opacity: 0,
+            y: 40,
+            x: -18,
+            scale: 0.97,
+            filter: 'blur(8px)',
+          }, {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: milestone,
+              start: 'top 90%',
+              toggleActions: 'play none none none',
+            },
+          });
+
+          gsap.fromTo(milestone.querySelectorAll('.journey-card-content > *'), {
+            opacity: 0,
+            y: 14,
+          }, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.07,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: milestone,
+              start: 'top 87%',
+              toggleActions: 'play none none none',
+            },
+          });
+        });
+
         ScrollTrigger.create({
-          trigger: journeyRef.current, start: 'top 60%', end: 'bottom 40%', scrub: true,
+          trigger: timelineRef.current,
+          start: 'top 65%',
+          end: 'bottom 38%',
+          scrub: 0.6,
           onUpdate: (self) => {
-            mobileCards.forEach((card, i) => {
-              const nodeProgress = i / Math.max(1, mobileCards.length - 1);
-              const isActive = self.progress >= nodeProgress - 0.15 && self.progress <= nodeProgress + 0.35;
-              const node = card.querySelector('.journey-mobile-node');
-              if (isActive) { card.classList.add('card-active-glow'); if (node) node.classList.add('node-active'); } 
-              else { card.classList.remove('card-active-glow'); if (node) node.classList.remove('node-active'); }
+            gsap.to('.journey-timeline-progress', { scaleY: self.progress, duration: 0.12, overwrite: true });
+            milestones.forEach((milestone, i) => {
+              const threshold = (i + 0.5) / milestones.length;
+              const isActive = self.progress >= threshold - 0.16;
+              milestone.classList.toggle('journey-milestone--active', isActive);
+              milestone.querySelector('.journey-card')?.classList.toggle('journey-card--active', isActive);
             });
-          }
+          },
         });
       });
     }, journeyRef);
+
     return () => ctx.revert();
   }, []);
 
   return (
     <section id="journey" ref={journeyRef} className="relative py-16 md:py-20 lg:py-24 scroll-mt-28 lg:scroll-mt-32 w-full overflow-x-clip overflow-y-visible">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div style={{ position: 'absolute', bottom: '10%', left: '20%', width: '400px', height: '400px', borderRadius: '50%', background: '#6366F1', opacity: 0.03, filter: 'blur(100px)' }} />
-      </div>
+      <SectionBackdrop variant="journey" />
+
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 flex flex-col gap-10 md:gap-14 overflow-visible">
         <div className="journey-header text-center max-w-3xl mx-auto relative z-10">
           <div className="journey-header-label">
             <SectionLabel text={aboutData.journey.label} centered={true} />
           </div>
           <h2 className="journey-header-heading font-heading font-bold text-(--color-heading) leading-[1.2] mb-6" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
-            A Creative Journey Across Editing, Design & <span className="gradient-text">Digital Content</span>
+            A Creative Journey Across Editing, Design &{' '}
+            <span className="gradient-text">Digital Content</span>
           </h2>
-          <p className="journey-header-text text-(--color-muted) leading-[1.8] text-[1.05rem]">
+          <p className="journey-header-text text-(--color-muted) leading-[1.8] text-[clamp(0.95rem,1.1vw,1.05rem)] px-1">
             {aboutData.journey.text}
           </p>
         </div>
-        <div className="journey-board-wrapper relative max-w-250 mx-auto w-full mt-4 md:mt-8 overflow-visible z-10">
-          <div className="journey-desktop-grid hidden lg:grid grid-cols-2 gap-x-14 gap-y-12 relative w-full overflow-visible z-10">
-            {aboutData.journey.items.map((item, index) => (
-              <div key={index} className="journey-card-wrapper overflow-visible relative z-10">
-                <div className={`journey-desktop-node hidden lg:block absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border border-(--color-border) bg-transparent z-10 transition-all duration-500 ${index % 2 === 0 ? '-right-7' : '-left-7'}`} />
-                <JourneyCard item={item} index={index} />
-              </div>
-            ))}
+
+        <div ref={timelineRef} className="journey-timeline-shell relative w-full max-w-[960px] mx-auto">
+          <div className="journey-timeline-track" aria-hidden="true">
+            <div className="journey-timeline-progress" />
           </div>
-          <div className="journey-mobile-list lg:hidden flex flex-col gap-6 relative w-full pl-10 overflow-visible z-10">
-            {aboutData.journey.items.map((item, index) => (
-              <div key={index} className="journey-card-wrapper w-full relative z-10">
-                <div className="journey-mobile-node absolute -left-7.25 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 bg-(--color-bg) z-10 transition-all duration-300" style={{ borderColor: index === 0 ? '#F59E0B' : index === 1 ? '#FB7185' : index === 2 ? '#E11D48' : '#6366F1', boxShadow: '0 0 8px rgba(251, 113, 133, 0.4)' }} />
-                <JourneyCard item={item} index={index} />
-              </div>
-            ))}
+
+          <div className="journey-timeline-list flex flex-col gap-8 sm:gap-10 lg:gap-14">
+            {aboutData.journey.items.map((item, index) => {
+              const side = index % 2 === 0 ? 'left' : 'right';
+
+              return (
+                <div key={index} className={`journey-milestone journey-milestone--${side}`}>
+                  <div className="journey-milestone-node-wrap" aria-hidden="true">
+                    <div className="journey-milestone-node">
+                      <span className="journey-milestone-node-core" />
+                    </div>
+                  </div>
+
+                  <div className="journey-milestone-card">
+                    <JourneyCard item={item} index={index} side={side} />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -660,9 +691,7 @@ export const SkillsSection = () => {
 
   return (
     <section id="skills" ref={mindsetRef} className="relative py-16 md:py-20 lg:py-24 scroll-mt-28 lg:scroll-mt-32 w-full overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div style={{ position: 'absolute', top: '30%', right: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: '#FB7185', opacity: 0.03, filter: 'blur(100px)' }} />
-      </div>
+      <SectionBackdrop variant="skills" />
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 flex flex-col overflow-visible">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative">
           <div className="relative mindset-content">
@@ -676,7 +705,7 @@ export const SkillsSection = () => {
             </p>
           </div>
           <div className="flex flex-col relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-h-75 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(251,113,133,0.04) 0%, rgba(99,102,241,0.03) 60%, transparent 70%)' }} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-h-75 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.04) 0%, rgba(251,113,133,0.03) 55%, transparent 72%)' }} />
             <div className="mindset-bars relative z-10 w-full">
               {aboutData.mindset.strengths.map((strength, index) => (
                 <ProgressBar key={index} label={strength.label} value={strength.value} visible={startBars} index={index} />
@@ -692,14 +721,13 @@ export const SkillsSection = () => {
 export const ToolsSection = () => {
   return (
     <section id="tools" className="relative py-16 md:py-20 lg:py-24 scroll-mt-28 lg:scroll-mt-32 w-full overflow-visible">
+      <SectionBackdrop variant="tools" />
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 flex flex-col gap-10 md:gap-14 overflow-visible">
         <div className="text-center max-w-2xl mx-auto">
           <SectionLabel text={aboutData.tools.label} centered={true} />
           <h2 className="font-heading font-bold text-(--color-heading) leading-[1.2] mb-5" style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)' }}>
             Software Behind the{' '}
-            <span style={{ background: 'linear-gradient(135deg, #F59E0B, #FB7185, #6366F1)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
-              Final Look
-            </span>
+            <span className="gradient-text">Final Look</span>
           </h2>
           <p className="text-(--color-muted) leading-[1.8] text-[1.05rem]">
             {aboutData.tools.text}

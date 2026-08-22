@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SectionLabel } from './About';
+import SectionBackdrop from '../ui/SectionBackdrop';
 import { longVideos, shortReels, graphicBanners } from '../../data/featuredProjectsData';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -421,6 +422,7 @@ export default function FeaturedProjects() {
         className="relative py-[60px] sm:py-[80px] lg:py-[100px] overflow-hidden"
         style={{ scrollMarginTop: '80px' }}
       >
+        <SectionBackdrop variant="portfolio" />
         <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-12 sm:gap-16">
 
           {/* ── Section Header ── */}
@@ -439,16 +441,7 @@ export default function FeaturedProjects() {
               }}
             >
               Work That Turns Ideas Into{' '}
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, #F59E0B 0%, #FB7185 52%, #6366F1 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                Premium Visual Content
-              </span>
+              <span className="gradient-text">Premium Visual Content</span>
             </h2>
 
             <p

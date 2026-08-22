@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { heroData } from '../../data/heroData';
 import CVModal from '../ui/CVModal';
+import SectionBackdrop from '../ui/SectionBackdrop';
 import gsap from 'gsap';
 
 import premiereLogo from '../../assets/logos/premiere.svg';
@@ -296,12 +297,7 @@ export default function Hero() {
           ))}
         </div>
 
-        {/* ── Local ambient glows (hero-only, low opacity) ── */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden z-0">
-          <div className="absolute rounded-full" style={{ width: '600px', height: '600px', top: '-10%', left: '-5%', background: 'radial-gradient(circle, var(--hero-glow-1) 0%, transparent 70%)', filter: 'blur(40px)' }} />
-          <div className="absolute rounded-full" style={{ width: '500px', height: '500px', bottom: '-5%', right: '10%', background: 'radial-gradient(circle, var(--hero-glow-2) 0%, transparent 70%)', filter: 'blur(40px)' }} />
-          <div className="absolute rounded-full" style={{ width: '400px', height: '400px', top: '30%', right: '25%', background: 'radial-gradient(circle, var(--hero-glow-3) 0%, transparent 70%)', filter: 'blur(60px)' }} />
-        </div>
+        <SectionBackdrop variant="hero" />
 
         <div className="relative z-10 w-full max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-14 lg:gap-10 xl:gap-16">
@@ -481,7 +477,7 @@ export default function Hero() {
                   className="absolute rounded-full"
                   style={{ inset: '28%', border: '1px dashed var(--orbit-ring-3)', animation: 'heroOrbitSpin 20s linear infinite' }}
                 >
-                  <div className="absolute rounded-full" style={{ width: '4px', height: '4px', top: '50%', left: '-2px', background: '#6366F1', boxShadow: '0 0 8px 2px rgba(99,102,241,0.4)' }} />
+                  <div className="absolute rounded-full" style={{ width: '4px', height: '4px', top: '50%', left: '-2px', background: '#FB7185', boxShadow: '0 0 8px 2px rgba(251,113,133,0.35)' }} />
                 </div>
 
                 {/* ── IR. Center Card ── */}
